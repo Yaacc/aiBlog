@@ -1,6 +1,6 @@
 package cn.ndky.mapper;
 
-import cn.ndky.entity.Employee;
+import cn.ndky.entity.User;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**
@@ -11,6 +11,6 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @author yaacc
  * @since 2023-07-31
  */
-public interface EmployeeMapper extends BaseMapper<Employee> {
+public interface UserMapper extends BaseMapper<User> {
 
 }

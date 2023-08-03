@@ -3,8 +3,8 @@ package cn.ndky.controller;
 
 import cn.ndky.common.Constants;
 import cn.ndky.config.Result;
-import cn.ndky.entity.Employee;
-import cn.ndky.service.IEmployeeService;
+import cn.ndky.entity.User;
+import cn.ndky.service.IUserService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 
 /**
  * <p>
@@ -26,32 +25,32 @@ import java.util.List;
  */
 @RestController
 @Slf4j
-@RequestMapping("/employee")
-public class EmployeeController{
+@RequestMapping("/user")
+public class UserController {
     @Autowired
-    private IEmployeeService employeeService;
+    private IUserService userService;
 
     //登入功能
     @PostMapping("/login")
-    public Result<?> login(HttpServletRequest request, @RequestBody Employee employeeParam) {
-        String password=employeeParam.getPassword();
-        LambdaQueryWrapper<Employee> lqw=new LambdaQueryWrapper<>();
-        lqw.eq(Employee::getEmployeeNumber, employeeParam.getEmployeeNumber());
-        Employee employee=employeeService.getOne(lqw);
-        if(employee==null){
+    public Result<?> login(HttpServletRequest request, @RequestBody User userParam) {
+        String password=userParam.getPassword();
+        LambdaQueryWrapper<User> lqw=new LambdaQueryWrapper<>();
+        lqw.eq(User::getUserNumber, userParam.getUserNumber());
+        User user=userService.getOne(lqw);
+        if(user==null){
             return Result.error(Constants.CODE_400,"用户不存在");
         }
-        if(!employee.getPassword().equals(password)){
+        if(!user.getPassword().equals(password)){
             return Result.error(Constants.CODE_400,"用户名或密码错误");
         }
-        request.getSession().setAttribute("adminParam",employee.getId());
-        return Result.success(employee);
+        request.getSession().setAttribute("userParam",user.getId());
+        return Result.success(user);
     }
 
     //登出功能
     @PostMapping("/logout")
     public Result<?> logout(HttpServletRequest request) {
-        request.getSession().removeAttribute("employeeParam");
+        request.getSession().removeAttribute("userParam");
         return Result.success("退出成功");
     }
 
@@ -60,39 +59,39 @@ public class EmployeeController{
     public Result<?> findPage(@RequestParam(defaultValue = "") Integer pageNum,
                               @RequestParam(defaultValue = "") Integer pageSize,
                               @RequestParam(defaultValue = "") String realName){
-        IPage<Employee> page = new Page<>(pageNum,pageSize);
-        QueryWrapper<Employee> queryWrapper = new QueryWrapper<>();
+        IPage<User> page = new Page<>(pageNum,pageSize);
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         if(!(realName==null||"".equals(realName))){
             queryWrapper.like("realName",realName);
         }
-        IPage<Employee> page1 = employeeService.page(page, queryWrapper);
+        IPage<User> page1 = userService.page(page, queryWrapper);
         return Result.success(page1);
     }
 
     //修改员工信息
     @PutMapping
-    public Result<?> update(@RequestBody Employee employee){
-        employeeService.updateById(employee);
+    public Result<?> update(@RequestBody User employee){
+        userService.updateById(employee);
         return Result.success("修改信息成功");
     }
 
     //查找所有
     @GetMapping("/all")
     public Result<?> findAll() {
-        return Result.success(employeeService.list());
+        return Result.success(userService.list());
     }
 
     //按id查询
     @GetMapping("/{id}")
     public Result<?> getById(@PathVariable Integer id) {
         log.info("查询的id：{}", id);
-        return Result.success(employeeService.getById(id));
+        return Result.success(userService.getById(id));
     }
 
     @DeleteMapping("/{id}")
     public Result<?> update(@PathVariable Integer id) {
         log.info("将被删除的id：{}", id);
-        employeeService.removeById(id);
+        userService.removeById(id);
         return Result.success();
     }
 }

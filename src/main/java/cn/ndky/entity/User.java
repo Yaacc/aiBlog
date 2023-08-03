@@ -6,7 +6,6 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -18,9 +17,9 @@ import io.swagger.annotations.ApiModelProperty;
  * @author yaacc
  * @since 2023-07-31
  */
-@TableName("tb_employee")
-@ApiModel(value = "Employee对象", description = "")
-public class Employee implements Serializable {
+@TableName("tb_user")
+@ApiModel(value = "User对象", description = "")
+public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -28,9 +27,9 @@ public class Employee implements Serializable {
         @TableId(value = "id", type = IdType.AUTO)
       private Integer id;
 
-      @ApiModelProperty("员工编号")
-      @TableField("employeeNumber")
-      private String employeeNumber;
+      @ApiModelProperty("用户编号")
+      @TableField("userNumber")
+      private String userNumber;
 
       @ApiModelProperty("用户名")
       private String username;
@@ -65,12 +64,12 @@ public class Employee implements Serializable {
           this.id = id;
       }
     
-    public String getEmployeeNumber() {
-        return employeeNumber;
+    public String getUserNumber() {
+        return userNumber;
     }
 
-      public void setEmployeeNumber(String employeeNumber) {
-          this.employeeNumber = employeeNumber;
+      public void setUserNumber(String userNumber) {
+          this.userNumber = userNumber;
       }
     
     public String getUsername() {
@@ -134,7 +133,7 @@ public class Employee implements Serializable {
     public String toString() {
         return "Employee{" +
               "id=" + id +
-                  ", employeeNumber=" + employeeNumber +
+                  ", userNumber=" + userNumber +
                   ", username=" + username +
                   ", password=" + password +
                   ", realName=" + realName +
