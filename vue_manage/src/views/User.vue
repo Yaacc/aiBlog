@@ -9,18 +9,27 @@
     <div class="search-input">
       <div class="input-suffix">
         <el-input
-          placeholder="搜索真实姓名"
-          v-model="RealName"
-          clearable>
+          placeholder="输入用户名"
+          v-model="searchUserName"
+          clearable
+          style="width: 180px">
+          <i slot="prefix" class="el-input__icon el-icon-search"></i>
+        </el-input>
+        <el-input
+          placeholder="输入真实姓名"
+          v-model="searchRealName"
+          clearable
+          style="width: 180px">
           <i slot="prefix" class="el-input__icon el-icon-search"></i>
         </el-input>
       </div>
       <el-button :loading="isLoading" @click="load" type="primary" icon="el-icon-search">搜索</el-button>
+      <el-button @click="reset">重置</el-button>
     </div>
     <el-table :data="tableData" stripe @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55"></el-table-column>
       <el-table-column prop="id" label="ID" width="60"></el-table-column>
-      <el-table-column prop="employeeNumber" label="职工编号" width="120"></el-table-column>
+      <el-table-column prop="userNumber" label="用户编号" width="120"></el-table-column>
       <el-table-column prop="username" label="用户名" width="120"></el-table-column>
       <el-table-column prop="realName" label="真实姓名" width="120"></el-table-column>
       <el-table-column prop="sex" label="性别" width="80"></el-table-column>
@@ -35,12 +44,14 @@
             size="mini"
             type="success"
             plain
-            @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+            @click="handleEdit(scope.$index, scope.row)">编辑
+          </el-button>
           <el-button
             size="mini"
             type="danger"
             plain
-            @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+            @click="handleDelete(scope.$index, scope.row)">删除
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -60,8 +71,8 @@
     <div>
       <el-dialog title="用户信息" :visible.sync="dialogFormVisible" width="40%" center>
         <el-form :model="form">
-          <el-form-item label="员工编号" :label-width="formLabelWidth">
-            <el-input v-model="form.employeeNumber" autocomplete="off"></el-input>
+          <el-form-item label="用户编号" :label-width="formLabelWidth">
+            <el-input v-model="form.userNumber" autocomplete="off"></el-input>
           </el-form-item>
           <el-form-item label="用户名" :label-width="formLabelWidth">
             <el-input v-model="form.username" autocomplete="off"></el-input>
@@ -101,7 +112,7 @@
 
 <script>
 export default {
-  name: "Employee",
+  name: "User",
   data() {
     return {
       tableData: [],
@@ -109,12 +120,13 @@ export default {
       currentPage: 1,
       pageNum: 1,
       pageSize: 5,
-      RealName: '', // 搜索框
+      searchRealName: '', // 搜索框
+      searchUserName: '',
       dialogFormVisible: false,
       isLoading: false,
       multipleSelection: [],
       form: {
-        employeeNumber: '',
+        userNumber: '',
         username: '',
         realName: '',
         sex: '',
@@ -132,11 +144,12 @@ export default {
   },
   methods: {
     load() {
-      this.request.get("/employee/page", {
+      this.request.get("/user/page", {
         params: {
           pageNum: this.pageNum,
           pageSize: this.pageSize,
-          realName: this.RealName
+          username: this.searchUserName,
+          realName: this.searchRealName
         }
       }).then(res => {
         console.log(res)
@@ -149,8 +162,10 @@ export default {
       //   this.total = res.total
       // })
     },
-    reset(){
-      this.reaName=""
+    reset() {
+      this.searchUserName = ""
+      this.searchRealName = ""  //清空搜索框
+      this.load()         //刷新页面
     },
     handleSelectionChange(val) {
       this.multipleSelection = val;

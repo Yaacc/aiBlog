@@ -78,7 +78,7 @@
 <script>
 import Aside from "../components/Aside";
 import Header from "../components/Header";
-// import request from "../utils/request"
+
 export default {
   data() {
     return {
@@ -106,14 +106,14 @@ export default {
   methods: {
     collapse() {
       this.isCollapse = !this.isCollapse;
-      if(this.isCollapse) {
+      if (this.isCollapse) {
         this.sideWith = 64
-        this.collapseBtnClass='el-icon-s-unfold'
-        this.menuHeader=false
-      }else{
+        this.collapseBtnClass = 'el-icon-s-unfold'
+        this.menuHeader = false
+      } else {
         this.sideWith = 240
-        this.collapseBtnClass='el-icon-s-fold'
-        this.menuHeader=true
+        this.collapseBtnClass = 'el-icon-s-fold'
+        this.menuHeader = true
       }
     },
 

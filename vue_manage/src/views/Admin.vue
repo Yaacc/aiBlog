@@ -9,13 +9,22 @@
     <div class="search-input">
       <div class="input-suffix">
         <el-input
-          placeholder="搜索真实姓名"
-          v-model="RealName"
-          clearable>
+          placeholder="输入用户名"
+          v-model="searchUserName"
+          clearable
+          style="width: 180px">
+          <i slot="prefix" class="el-input__icon el-icon-search"></i>
+        </el-input>
+        <el-input
+          placeholder="输入真实姓名"
+          v-model="searchRealName"
+          clearable
+          style="width: 180px">
           <i slot="prefix" class="el-input__icon el-icon-search"></i>
         </el-input>
       </div>
       <el-button :loading="isLoading" @click="load" type="primary" icon="el-icon-search">搜索</el-button>
+      <el-button @click="reset">重置</el-button>
     </div>
     <!--    表格-->
     <el-table :data="tableData" stripe @selection-change="handleSelectionChange">
@@ -33,12 +42,14 @@
             size="mini"
             type="success"
             plain
-            @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+            @click="handleEdit(scope.$index, scope.row)">编辑
+          </el-button>
           <el-button
             size="mini"
             type="danger"
             plain
-            @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+            @click="handleDelete(scope.$index, scope.row)">删除
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -101,7 +112,8 @@ export default {
       currentPage: 1,
       pageNum: 1,
       pageSize: 5,
-      RealName: '', // 搜索框
+      searchRealName: '', // 搜索框
+      searchUserName: '',
       dialogFormVisible: false,
       isLoading: false,
       multipleSelection: [],
@@ -125,7 +137,8 @@ export default {
         params: {
           pageNum: this.pageNum,
           pageSize: this.pageSize,
-          realName: this.RealName
+          username: this.searchUserName,
+          realName: this.searchRealName
         }
       }).then(res => {
         console.log(res)
@@ -133,8 +146,10 @@ export default {
         this.total = res.data.total
       })
     },
-    reset(){
-      this.reaName=""
+    reset() {
+      this.searchUserName = ""
+      this.searchRealName = ""
+      this.load()
     },
     handleSelectionChange(val) {
       this.multipleSelection = val;

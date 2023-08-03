@@ -26,7 +26,7 @@
       </template>
       <el-menu-item-group>
         <template slot="title">分组一</template>
-        <el-menu-item index="/employee">职工管理</el-menu-item>
+        <el-menu-item index="/user">职工管理</el-menu-item>
         <el-menu-item index="/admin">管理员</el-menu-item>
       </el-menu-item-group>
       <el-menu-item-group title="分组2">
