@@ -15,7 +15,7 @@
 
 <script>
 export default {
-  name: "Login.vue",
+  name: "Login",
   data() {
     return {
       user: {}
@@ -32,7 +32,7 @@ export default {
 <style scoped>
 .wrapper {
   height: 100vh;
-  background-image: linear-gradient(to bottom right, #fc466b, #3f5efb);
+  background-color: gray;
   overflow: hidden;
 }
 </style>

@@ -1,17 +1,15 @@
 <template>
   <div id="app">
-    <!--    <Manage/>-->
+<!--        <Login/>-->
     <router-view></router-view>
   </div>
 </template>
 
 <script>
-// import Manage from './views/Manage.vue'
+// import Login from './views/Login.vue'
 
 export default {
   name: 'App',
-  // components: {
-  //   Manage
-  // },
+
 }
 </script>

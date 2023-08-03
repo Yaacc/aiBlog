@@ -29,9 +29,7 @@
         <el-menu-item index="/user">职工管理</el-menu-item>
         <el-menu-item index="/admin">管理员</el-menu-item>
       </el-menu-item-group>
-      <el-menu-item-group title="分组2">
-        <el-menu-item index="2-3">设置</el-menu-item>
-      </el-menu-item-group>
+        <el-menu-item index="">设置</el-menu-item>
     </el-submenu>
   </el-menu>
 </template>

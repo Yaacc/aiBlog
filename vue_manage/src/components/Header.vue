@@ -18,7 +18,7 @@
         <i class="el-icon-arrow-down"></i>
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item>个人信息</el-dropdown-item>
-          <el-dropdown-item>退出</el-dropdown-item>
+          <el-dropdown-item @click.native="logout()">退出</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
     </div>
@@ -34,10 +34,17 @@ export default {
     collapse: Boolean,
     adminName: String,
   },
+  methods: {
+    logout() {
+      localStorage.clear();
+      this.$router.push("Login" );
+    },
+  },
+
 }
 </script>
-<style scoped>
 
+<style scoped>
 .header-userInfo{
   float: right;
 }
