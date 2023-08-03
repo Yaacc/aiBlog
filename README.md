@@ -48,18 +48,18 @@ INSERT INTO `tb_admin` VALUES (00004, 'a34243', 'a1', '123', '贝贝', '女', 32
 SET FOREIGN_KEY_CHECKS = 1;
 ```
 
-## tb_employee
+## tb_user
 ```mysql
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
 
 -- ----------------------------
--- Table structure for tb_employee
+-- Table structure for tb_user
 -- ----------------------------
-DROP TABLE IF EXISTS `tb_employee`;
-CREATE TABLE `tb_employee`  (
+DROP TABLE IF EXISTS `tb_user`;
+CREATE TABLE `tb_user`  (
   `id` int(5) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT COMMENT '序号',
-  `employeeNumber` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '员工编号',
+  `userNumber` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '用户编号',
   `username` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '用户名',
   `password` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '密码',
   `realName` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '真实姓名',
