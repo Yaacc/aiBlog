@@ -4,11 +4,14 @@
 <template>
   <el-menu
     :default-openeds="['2']"
-    class="el-menu-vertical-demo"
+    class="el-menu-vertical"
     :collapse="isCollapse"
     :collapse-transition="false"
-    active-text-color="orange"
     text-color="#fff"
+    @open="handleOpen"
+    @close="handleClose"
+    background-color="#545c64"
+    active-text-color="#ffd04b"
     router
   >
     <div class="menuHeader">
@@ -40,11 +43,24 @@ export default {
   props: {
     isCollapse: Boolean,
     menuHeader: Boolean
+  },
+  methods: {
+    handleOpen(key, keyPath) {
+      console.log(key, keyPath);
+    },
+    handleClose(key, keyPath) {
+      console.log(key, keyPath);
+    }
   }
 }
 </script>
 
 <style scoped>
+.el-menu-vertical {
+  min-height: 100%;
+  overflow-x: hidden;
+  border-right-color: transparent;
+}
 .menuHeader{
   height: 60px;
   line-height: 60px;
