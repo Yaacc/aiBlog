@@ -17,7 +17,7 @@
       <el-dropdown>
         <i class="el-icon-arrow-down"></i>
         <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item>个人信息</el-dropdown-item>
+          <el-dropdown-item @click.native="personalinformation()">个人信息</el-dropdown-item>
           <el-dropdown-item @click.native="logout()">退出</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
@@ -39,6 +39,10 @@ export default {
       localStorage.clear();
       this.$router.push("Login" );
     },
+    personalinformation(){
+      localStorage.clear();
+      this.$router.push("Personal");
+    }
   },
 
 }

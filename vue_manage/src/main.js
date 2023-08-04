@@ -14,6 +14,7 @@ Vue.use(ElementUI);
 
 // 全局request
 Vue.prototype.request=request
+
 /* eslint-disable no-new */
 new Vue({
   router,
