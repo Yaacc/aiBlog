@@ -7,6 +7,29 @@
 [IDEA创建Maven项目报错- Error injecting constructor, java.lang.NoSuchMethodError: org.apache.maven.model](https://blog.csdn.net/qq_44605463/article/details/123803362)
 
 # mysql
+## tb_files
+```mysql
+SET NAMES utf8mb4;
+SET FOREIGN_KEY_CHECKS = 0;
+
+-- ----------------------------
+-- Table structure for tb_files
+-- ----------------------------
+DROP TABLE IF EXISTS `tb_files`;
+CREATE TABLE `tb_files`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id',
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '文件名称',
+  `type` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '文件类型',
+  `size` bigint(10) NULL DEFAULT NULL COMMENT '文件大小',
+  `url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '下载链接',
+  `md5` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '文件md5',
+  `is_delete` tinyint(1) NULL DEFAULT 0 COMMENT '是否删除（1删除）',
+  `enable` tinyint(1) NULL DEFAULT 1 COMMENT '是否禁用链接（1可用）',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 17 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Compact;
+
+SET FOREIGN_KEY_CHECKS = 1;
+```
 ## tb_admin
 ```mysql
 /*
@@ -74,9 +97,9 @@ CREATE TABLE `tb_user`  (
 -- ----------------------------
 -- Records of tb_employee
 -- ----------------------------
-INSERT INTO `tb_employee` VALUES (00001, '2132', 'employee', '123', '小红', '女', 22, '10101010010', '123456789123456789', '2023-07-31 16:32:56');
-INSERT INTO `tb_employee` VALUES (00002, 'w2321', 'w1', '123', '小白', NULL, NULL, '12345678910', '123456789123456789', '2023-07-31 16:37:14');
-INSERT INTO `tb_employee` VALUES (00003, 'e3244', 'work1', '123', '小李', '男', 32, '11111000001', '12365498765432132X', '2023-07-31 16:44:38');
+INSERT INTO `tb_user` VALUES (00001, '2132', 'employee', '123', '小红', '女', 22, '10101010010', '123456789123456789', '2023-07-31 16:32:56');
+INSERT INTO `tb_user` VALUES (00002, 'w2321', 'w1', '123', '小白', NULL, NULL, '12345678910', '123456789123456789', '2023-07-31 16:37:14');
+INSERT INTO `tb_user` VALUES (00003, 'e3244', 'work1', '123', '小李', '男', 32, '11111000001', '12365498765432132X', '2023-07-31 16:44:38');
 
 SET FOREIGN_KEY_CHECKS = 1;
 ```
