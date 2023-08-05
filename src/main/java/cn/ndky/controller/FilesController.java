@@ -4,9 +4,14 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.SecureUtil;
+import cn.ndky.config.Result;
 import cn.ndky.entity.Files;
 import cn.ndky.mapper.FilesMapper;
+import cn.ndky.service.Impl.FilesServiceImpl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import io.swagger.models.auth.In;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -36,13 +41,11 @@ public class FilesController {
     @Resource
     private FilesMapper filesMapper;
 
+    @Autowired
+    private FilesServiceImpl filesService;
     /**
      * 文件上传
      * POST http://localhost/files/upload
-     *
-     * @param file
-     * @return
-     * @throws IOException
      */
     @PostMapping("/upload")
     public String upload(@RequestParam MultipartFile file) throws IOException {
@@ -87,12 +90,18 @@ public class FilesController {
     }
 
     /**
+     * 通过文件md5查询
+     */
+    private Files getFileMd5(String md5) {
+        QueryWrapper<Files> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("md5", md5);
+        List<Files> filesList = filesMapper.selectList(queryWrapper);
+        return filesList.size() == 0 ? null : filesList.get(0);
+    }
+
+    /**
      * 文件下载
      * GET http://localhost/files/{fileUUID}
-     *
-     * @param fileUUID
-     * @param response
-     * @throws IOException
      */
     @GetMapping("/{fileUUID}")
     public void download(@PathVariable String fileUUID, HttpServletResponse response) throws IOException {
@@ -109,16 +118,19 @@ public class FilesController {
     }
 
     /**
-     * 通过文件md5查询
-     *
-     * @param md5
-     * @return
+     * 分页查询 http://localhost/page?pageNum=1&pageSize=2
      */
-    private Files getFileMd5(String md5) {
+    @GetMapping("/page")
+    public Result findPage(@RequestParam Integer pageNum,
+                           @RequestParam Integer pageSize,
+                           @RequestParam(defaultValue = "") String name){
         QueryWrapper<Files> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("md5", md5);
-        List<Files> filesList = filesMapper.selectList(queryWrapper);
-        return filesList.size() == 0 ? null : filesList.get(0);
+        queryWrapper.eq("is_delete",false);
+        queryWrapper.orderByDesc("id");
+        if (!"".equals(name)) {
+            queryWrapper.like("name",name);
+        }
+        return Result.success(filesService.page(new Page<>(pageNum,pageSize), queryWrapper));
     }
 }
 
