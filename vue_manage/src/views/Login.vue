@@ -54,7 +54,8 @@ export default {
     // },
     login() {
       this.request.post("user/login",this.loginForm).then(res=>{
-        if(res.code === "200"){
+        if(res.code === '200'){
+          this.$message.success("登录成功")
           this.$router.push("/")
         }else{
           this.$message.error("错误")
