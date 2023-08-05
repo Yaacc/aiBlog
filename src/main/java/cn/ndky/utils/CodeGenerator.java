@@ -20,7 +20,7 @@ public class CodeGenerator {
                     builder.author("yaacc") // 设置作者
                             .enableSwagger() // 开启 swagger 模式
                             .fileOverride() // 覆盖已生成文件
-                            .outputDir("D:\\Document\\java\\nursing_home\\src\\main\\java\\"); // 指定输出目录
+                            .outputDir("D:\\Document\\java\\aiBlog\\src\\main\\java\\"); // 指定输出目录
                 })
 //                .dataSourceConfig(builder -> builder.typeConvertHandler((globalConfig, typeRegistry, metaInfo) -> {
 //                    int typeCode = metaInfo.getJdbcType().TYPE_CODE;
@@ -34,7 +34,7 @@ public class CodeGenerator {
                 .packageConfig(builder -> {
                     builder.parent("cn.ndky") // 设置父包名
                             .moduleName("") // 设置父包模块名
-                            .pathInfo(Collections.singletonMap(OutputFile.mapperXml, "D:\\Document\\java\\nursing_home\\src\\main\\resources\\mapper\\")); // 设置mapperXml生成路径
+                            .pathInfo(Collections.singletonMap(OutputFile.mapperXml, "D:\\Document\\java\\aiBlog\\src\\main\\resources\\mapper\\")); // 设置mapperXml生成路径
                 })
                 .strategyConfig(builder -> {
                     builder.addInclude("tb_") // 设置需要生成的表名
