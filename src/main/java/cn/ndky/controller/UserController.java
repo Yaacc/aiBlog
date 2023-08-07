@@ -1,6 +1,8 @@
 package cn.ndky.controller;
 
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.crypto.SecureUtil;
 import cn.hutool.poi.excel.ExcelReader;
 import cn.hutool.poi.excel.ExcelUtil;
 import cn.hutool.poi.excel.ExcelWriter;
@@ -102,19 +104,50 @@ public class UserController {
         return Result.success(userService.getById(id));
     }
 
+    // 新增或更新
+    @PostMapping
+    public Result<?> saveAndUpdate(@RequestBody User user){
+        if(user.getId() == null && user.getPassword() == null){
+//            user.setPassword(SecureUtil.md5("123"));
+            user.setPassword("123");
+        }
+        return Result.success(userService.saveOrUpdate(user));
+    }
+
+    // 按序号删除
     @DeleteMapping("/{id}")
-    public Result<?> update(@PathVariable Integer id) {
+    public Result<?> delete(@PathVariable Integer id) {
         log.info("将被删除的id：{}", id);
         userService.removeById(id);
         return Result.success();
     }
-
+//    批量删除
+    @PostMapping("/del/batch")
+    public Result<?> deleteBatch(@RequestBody List<Integer> ids){
+        return Result.success(userService.removeByIds(ids));
+    }
     //导入功能
     @PostMapping("/import")
-    public Result<?> importExcel(MultipartFile multipartFile) throws Exception{
-        InputStream inputStream = multipartFile.getInputStream();
+    public Result<?> importExcel(MultipartFile file) throws Exception{
+        InputStream inputStream = file.getInputStream();
         ExcelReader reader = ExcelUtil.getReader(inputStream);
-        //reader.addHeaderAlias("序号","id");
+//        --------------------------------------
+//        List<List<Object>> list = reader.read(1);
+//        List<User> users = CollUtil.newArrayList();
+//        for (List<Object> row : list){
+//            User user = new User();
+//            user.setUserNumber(row.get(0).toString());
+//            user.setUsername(row.get(1).toString());
+//            user.setPassword(row.get(2).toString());
+//            user.setRealName(row.get(3).toString());
+//            user.setSex(row.get(4).toString());
+//            user.setAge(Integer.valueOf(row.get(5).toString()));
+//            user.setPhone(row.get(6).toString());
+//            user.setIDCard(row.get(7).toString());
+//            users.add(user);
+//        }
+//        ---------------------------------------
+//        reader.addHeaderAlias("序号","id");
         reader.addHeaderAlias("用户编号","userNumber");
         reader.addHeaderAlias("用户名","username");
         reader.addHeaderAlias("密码","password");
@@ -123,7 +156,7 @@ public class UserController {
         reader.addHeaderAlias("年龄","age");
         reader.addHeaderAlias("电话号码","phone");
         reader.addHeaderAlias("身份证号","IDCard");
-        List<User> list = reader.readAll(User.class);
+        List<User> list = reader.readAll(User.class);       // 表头必须是英文或匹配Bean
         System.out.println(list);
         boolean saveBatch = userService.saveBatch(list);
         if(!saveBatch){
