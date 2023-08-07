@@ -240,6 +240,8 @@ export default {
       this.multipleSelection = val;
     },
     handleEdit(index, row) {
+     this.form=row;
+     this.dialogFormVisible=true;
       console.log(index, row);
     },
     handleDelete(index, row) {
