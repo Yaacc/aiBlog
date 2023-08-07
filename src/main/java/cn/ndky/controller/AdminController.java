@@ -7,6 +7,7 @@ import cn.hutool.poi.excel.ExcelWriter;
 import cn.ndky.common.Constants;
 import cn.ndky.config.Result;
 import cn.ndky.entity.Admin;
+import cn.ndky.entity.User;
 import cn.ndky.service.IAdminService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -85,18 +86,32 @@ public class AdminController{
     }
 
     //添加管理员
-    @PostMapping
+    /*@PostMapping
     public Result<?> save(@RequestBody Admin admin){
         log.info("新增的员工信息：{}",admin.toString());
         admin.setPassword("123");
         adminService.save(admin);
         return Result.success("添加成功");
-    }
+    }*/
     //修改员工信息
     @PutMapping
     public Result<?> update(@RequestBody Admin admin){
         adminService.updateById(admin);
         return Result.success("修改信息成功");
+    }
+    // 新增或更新
+    @PostMapping
+    public Result<?> saveAndUpdate(@RequestBody Admin admin){
+        if(admin.getId() == null && admin.getPassword() == null){
+//            user.setPassword(SecureUtil.md5("123"));
+            admin.setPassword("123");
+        }
+        return Result.success(adminService.saveOrUpdate(admin));
+    }
+    //批量删除
+    @PostMapping("/del/batch")
+    public Result<?> deleteBatch(@RequestBody List<Integer> ids){
+        return Result.success(adminService.removeByIds(ids));
     }
 
     //查找所有

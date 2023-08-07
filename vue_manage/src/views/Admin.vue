@@ -2,9 +2,30 @@
   <div>
     <div class="button-left">
       <el-button type="success" icon="el-icon-edit" @click="dialogFormVisible=true">新增</el-button>
-      <el-button type="danger" icon="el-icon-delete" plain>批量删除</el-button>
-      <el-button type="primary" plain>下载<i class="el-icon-download el-icon--right"></i></el-button>
-      <el-button type="primary" plain>上传<i class="el-icon-upload el-icon--right"></i></el-button>
+      <el-popconfirm
+        class="ml10px"
+        confirm-button-text="确定"
+        cancel-button-text="取消"
+        icon="el-icon-info"
+        icon-color="red"
+        title="确定批量删除这些数据吗？"
+        @confirm="delBatch">
+        <el-button type="danger" icon="el-icon-delete" slot="reference" plain>批量删除</el-button>
+      </el-popconfirm>
+
+      <!--        :action="'http://'+localhost+'/user/import'"-->
+      <el-upload action="http://localhost/admin/import"
+                 :show-file-list="false" accept="xlsx"
+                 :on-success="handleExcelImportSuccess"
+                 style="display: inline-block"
+                 class="ml10px"
+                 limit="1"
+      >
+        <el-button type="primary" plain>导入<i class="el-icon-upload el-icon--right"></i></el-button>
+      </el-upload>
+
+      <el-button type="primary" @click="exp" plain>导出<i class="el-icon-download el-icon--right"></i></el-button>
+
     </div>
     <div class="search-input">
       <div class="input-suffix">
@@ -44,12 +65,16 @@
             plain
             @click="handleEdit(scope.$index, scope.row)">编辑
           </el-button>
-          <el-button
-            size="mini"
-            type="danger"
-            plain
-            @click="handleDelete(scope.$index, scope.row)">删除
-          </el-button>
+          <el-popconfirm
+            class="ml-5px"
+            confirm-button-text="确定"
+            cancel-button-text="取消"
+            icon="el-icon-info"
+            icon-color="red"
+            title="确定"
+            @confirm="del(scope.row.id)">
+            <el-button size="mini" type="danger" slot="reference" plain>删除</el-button>
+          </el-popconfirm>
         </template>
       </el-table-column>
     </el-table>
@@ -93,7 +118,7 @@
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button @click="dialogFormVisible = false">取 消</el-button>
-          <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+          <el-button type="primary" @click="save">确 定</el-button>
         </div>
       </el-dialog>
     </div>
@@ -129,6 +154,10 @@ export default {
     }
   },
   created() {
+    /*fetch("http://localhost:80/admin/page").then(res => res.json()).then(res =>{
+      console.log(res);
+      this.tableData=res.data()
+    })*/
     this.load()
   },
   methods: {
@@ -151,10 +180,56 @@ export default {
       this.searchRealName = ""
       this.load()
     },
+    // 新增
+    save(){
+      this.request.post("/admin",this.form).then(res=>{
+        if(res.code === '200'){
+          this.$message.success("保存成功")
+          this.dialogFormVisible = false
+          this.load()
+        }else{
+          this.$message.error("保存失败")
+        }
+      })
+    },
+    // 按序号删除
+    del(id){
+      this.request.delete("/admin/"+id).then(res =>{
+        if(res.code === '200'){
+          this.$message.success("删除成功")
+          this.load()
+        }else{
+          this.$message.error("删除失败")
+        }
+      })
+    },
+    // 批量删除
+    delBatch(){
+      let ids = this.multipleSelection.map(value => value.id)
+      this.request.post("/admin/del/batch",ids).then(res =>{
+        if(res.code==='200'){
+          this.$message.success("批量删除成功")
+          this.load()
+        }else{
+          this.$message.error("批量删除失败")
+        }
+      })
+    },
+    // 导出
+    exp(){
+      window.open('http://localhost/admin/export')
+    },
+    // 表格导入提醒
+    handleExcelImportSuccess(){
+      this.$message.success("导入成功")
+      this.load()
+    },
     handleSelectionChange(val) {
       this.multipleSelection = val;
     },
     handleEdit(index, row) {
+      this.form=row;
+      this.dialogFormVisible=true;
       console.log(index, row);
     },
     handleDelete(index, row) {
