@@ -13,7 +13,8 @@ const routes = [
       { path: 'home', name: 'Home', component: ()=>import('../views/Home.vue')},
       { path: 'user', name: 'User', component: ()=>import('../views/User.vue')},
       { path: 'admin', name: 'Admin',component:()=>import('../views/Admin.vue')},
-      { path: 'personal',name: 'Personal',component:()=>import('../views/Personal')}
+      { path: 'personal',name: 'Personal',component:()=>import('../views/Personal')},
+      { path: 'files',name: 'Files',component:()=>import('../views/Files.vue')}
     ]
   },
   {

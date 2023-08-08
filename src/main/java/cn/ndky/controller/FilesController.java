@@ -5,12 +5,16 @@ import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.SecureUtil;
 import cn.ndky.config.Result;
+import cn.ndky.entity.Admin;
 import cn.ndky.entity.Files;
+import cn.ndky.entity.User;
 import cn.ndky.mapper.FilesMapper;
 import cn.ndky.service.Impl.FilesServiceImpl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.models.auth.In;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
@@ -32,6 +36,7 @@ import java.util.List;
  * @author yaacc
  * @since 2023-08-05
  */
+@Slf4j
 @RestController
 @RequestMapping("/files")
 public class FilesController {
@@ -88,6 +93,11 @@ public class FilesController {
         filesMapper.insert(saveFile);
         return url;
     }
+    @PostMapping("/update")
+    public Result<?> saveAndUpdate(@RequestBody Files files){
+
+        return Result.success(filesMapper.updateById(files));
+    }
 
     /**
      * 通过文件md5查询
@@ -97,6 +107,26 @@ public class FilesController {
         queryWrapper.eq("md5", md5);
         List<Files> filesList = filesMapper.selectList(queryWrapper);
         return filesList.size() == 0 ? null : filesList.get(0);
+    }
+
+    // 按序号删除
+    @DeleteMapping("/{id}")
+    public Result<?> delete(@PathVariable Integer id) {
+        Files file = filesMapper.selectById(id);
+        file.setIsDelete(true);
+        return Result.success(filesMapper.updateById(file));
+    }
+    //批量删除
+    @PostMapping("/del/batch")
+    public Result<?> deleteBatch(@RequestBody List<Integer> ids){
+        QueryWrapper<Files> queryWrapper = new QueryWrapper<>();
+        queryWrapper.in("id",ids);
+        List<Files> files = filesMapper.selectList(queryWrapper);
+        for (Files file : files){
+            file.setIsDelete(true);
+            filesMapper.updateById(file);
+        }
+        return Result.success();
     }
 
     /**
@@ -121,13 +151,13 @@ public class FilesController {
      * 分页查询 http://localhost/page?pageNum=1&pageSize=2
      */
     @GetMapping("/page")
-    public Result findPage(@RequestParam Integer pageNum,
+    public Result<?> findPage(@RequestParam Integer pageNum,
                            @RequestParam Integer pageSize,
                            @RequestParam(defaultValue = "") String name){
         QueryWrapper<Files> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("is_delete",false);
         queryWrapper.orderByDesc("id");
-        if (!"".equals(name)) {
+        if (!(name==null||"".equals(name))) {
             queryWrapper.like("name",name);
         }
         return Result.success(filesService.page(new Page<>(pageNum,pageSize), queryWrapper));
