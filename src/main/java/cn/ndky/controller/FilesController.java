@@ -109,14 +109,21 @@ public class FilesController {
         return filesList.size() == 0 ? null : filesList.get(0);
     }
 
-    // 按序号删除
+    /**
+     * 按序号删除
+     * 建议使用假删除
+     */
     @DeleteMapping("/{id}")
     public Result<?> delete(@PathVariable Integer id) {
         Files file = filesMapper.selectById(id);
         file.setIsDelete(true);
         return Result.success(filesMapper.updateById(file));
     }
-    //批量删除
+
+    /**
+     * 批量删除
+     * 建议使用假删除
+     */
     @PostMapping("/del/batch")
     public Result<?> deleteBatch(@RequestBody List<Integer> ids){
         QueryWrapper<Files> queryWrapper = new QueryWrapper<>();
@@ -128,7 +135,13 @@ public class FilesController {
         }
         return Result.success();
     }
-
+    /**
+     * 获取文件总数
+     */
+    @GetMapping("/total")
+    public Result<?> getNumberOfFiles(){
+        return Result.success(filesService.count());
+    }
     /**
      * 文件下载
      * GET http://localhost/files/{fileUUID}
