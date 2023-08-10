@@ -36,17 +36,17 @@
       <el-row :gutter="24">
         <el-col :span="8">
           <el-card>
-            <div id="lineOfUsers" style="width: 450px; height: 400px"></div>
+            <div id="lineOfUsers" style="width: 450px; height: 350px"></div>
           </el-card>
         </el-col>
         <el-col :span="8">
           <el-card>
-            <div id="userPie" style="width: 450px; height: 400px"></div>
+            <div id="userPie" style="width: 450px; height: 350px"></div>
           </el-card>
         </el-col>
         <el-col :span="8">
           <el-card>
-            <div >
+            <div style="height: 620px;">
               <el-calendar v-model="value"></el-calendar>
             </div>
           </el-card>
@@ -70,56 +70,22 @@ export default {
       numberOfDocument: 0,    // 文章数量
       numberOfFiles: 0,       // 文件数量
       numberOfMessage: 0,     // 消息数量
-      haveNewMessage: false,
-
+      haveNewMessage: false,  // 是否有新消息
+      value: new Date()
     };
   },
   created() {
     this.load()
   },
   mounted() {
-    // 基于准备好的dom，初始化echarts实例
-    var pieChart = echarts.init(document.getElementById('userPie'));
-    // 绘制图表
-    pieChart.setOption({
-      title: {
-        text: '用户男女比例',
-        left: 'center'
-      },
-      tooltip: {
-        trigger: 'item'
-      },
-      legend: {
-        orient: 'vertical',   // 排列
-        left: 'left'          // 对齐
-      },
-      series: [
-        {
-          // name: 'Access From',
-          type: 'pie',
-          radius: '70%',    // 大小比例
-          data: [
-            {value: 1048, name: '男性'},
-            {value: 735, name: '女性'},
-          ],
-          emphasis: {
-            itemStyle: {
-              shadowBlur: 10,
-              shadowOffsetX: 0,
-              shadowColor: 'rgba(0, 0, 0, 0.5)'
-            }
-          }
-        }
-      ]
-    });
-
+    // 折线图
     var lineChart = echarts.init(document.getElementById('lineOfUsers'));
     lineChart.setOption({
       title: {
         text: '用户增长曲线',
         left: 'center',
       },
-      // 触发显示数值
+      // 鼠标触发显示数值
       tooltip: {
         trigger: 'axis',
         axisPointer: {
@@ -138,7 +104,7 @@ export default {
         {
           data: [150, 230, 224, 218, 260, 268, 294],
           type: 'line',
-          // 显示数值
+          // 始终显示数值
           // label: {
           //   show: true,
           //   position: 'bottom',
@@ -149,7 +115,47 @@ export default {
         }
       ]
     });
-
+    // 基于准备好的dom，初始化echarts实例
+    // 饼图
+    var pieChart = echarts.init(document.getElementById('userPie'));
+    var pieOption = {
+      title: {
+        text: '用户男女比例',
+        left: 'center'
+      },
+      tooltip: {
+        trigger: 'item'
+      },
+      legend: {
+        orient: 'vertical',   // 排列
+        left: 'left'          // 对齐
+      },
+      series: [
+        {
+          // name: 'Access From',
+          type: 'pie',
+          radius: '70%',    // 大小比例
+          data: [
+            // {value: 1048, name: '男性'},
+            // {value: 735, name: '女性'},
+          ],
+          emphasis: {
+            itemStyle: {
+              shadowBlur: 10,
+              shadowOffsetX: 0,
+              shadowColor: 'rgba(0, 0, 0, 0.5)'
+            }
+          }
+        }
+      ]
+    };
+    this.request.get("/echarts/maleOrFemale").then(res=>{
+      pieOption.series[0].data = [
+        {value: res.data[0], name: '男性'},
+        {value: res.data[1], name: '女性'},
+      ]
+      pieChart.setOption(pieOption)
+    })
   },
   methods: {
     load() {
