@@ -17,7 +17,9 @@
 .ml10px{
   margin-left: 10px;
 }
-
+.mr5px{
+  margin-right: 5px;
+}
 .block{
   text-align: center;
   margin-top: 8px;

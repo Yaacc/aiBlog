@@ -91,13 +91,18 @@ public class UserController {
         return Result.success("修改信息成功");
     }
 
-    //查找所有
+    // 查找所有
     @GetMapping("/all")
     public Result<?> findAll() {
         return Result.success(userService.list());
     }
 
-    //按id查询
+    // 获取用户总数
+    @GetMapping("/total")
+    public Result<?> getNumberOfUsers(){
+        return Result.success(userService.count());
+    }
+    // 按id查询
     @GetMapping("/{id}")
     public Result<?> getById(@PathVariable Integer id) {
         log.info("查询的id：{}", id);
