@@ -27,6 +27,9 @@ public class EchartsController {
     @Autowired
     private IUserService userService;
 
+    /**
+     * 获取男女用户数
+     */
     @GetMapping("/maleOrFemale")
     public Result<?> maleOrFemale(){
         QueryWrapper<User> wrapperMale = new QueryWrapper<>();
