@@ -13,17 +13,17 @@
     <div class="header-userInfo">
       <el-avatar style="vertical-align: middle;margin-right: 8px;"
                  src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"></el-avatar>
-      <span style="margin-right: 12px; font-size: 16px;">{{ adminName }}</span>
+      <span style="margin-right: 12px; font-size: 16px;">{{ admin.username }}</span>
       <el-dropdown>
         <i class="el-icon-arrow-down"></i>
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item @click.native="personalinformation()">个人信息</el-dropdown-item>
+          <el-dropdown-item @click.native="ChangePassword()">修改密码</el-dropdown-item>
           <el-dropdown-item @click.native="logout()">退出</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
     </div>
   </div>
-
 </template>
 
 <script>
@@ -32,7 +32,11 @@ export default {
   props: {
     collapseBtnClass: String,
     collapse: Boolean,
-    adminName: String,
+  },
+  data(){
+    return{
+      admin:localStorage.getItem("admin") ? JSON.parse(localStorage.getItem("admin")):{}
+    }
   },
   methods: {
     logout() {
@@ -42,9 +46,12 @@ export default {
     personalinformation(){
       localStorage.clear();
       this.$router.push("Personal");
+    },
+    ChangePassword(){
+      localStorage.clear();
+      this.$router.push("ChangPassWord");
     }
   },
-
 }
 </script>
 

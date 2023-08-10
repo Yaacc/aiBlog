@@ -5,14 +5,14 @@
       <div style="margin: 20px 0;text-align:center;font-size: 24px">登录</div>
       <el-form :model="loginForm" :rules="rules">
         <el-form-item prop="userNumber">
-          <el-input size="medium" style="margin: 10px 0" prefix-icon="el-icon-user" v-model="loginForm.userNumber"></el-input>
+          <el-input size="medium" style="margin: 10px 0" prefix-icon="el-icon-user" v-model="loginForm.adminNumber"></el-input>
         </el-form-item>
         <el-form-item prop="password">
           <el-input size="medium" style="margin: 10px 0" prefix-icon="el-icon-lock" v-model="loginForm.password" show-password></el-input>
         </el-form-item>
         <el-form-item style="margin: 10px 0; text-align: right">
           <el-button type="primary" size="small" autocomplete="off" @click="login">登录</el-button>
-          <el-button type="warning" size="small" autocomplete="off">注册</el-button>
+          <el-button type="warning" size="small" autocomplete="off" @click="$router.push('/register')" >注册</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -25,11 +25,11 @@ export default {
   data() {
     return {
       loginForm: {
-        userNumber: '',
+        adminNumber: '',
         password:''
       },
       rules: {
-        userNumber:[
+        adminNumber:[
           {required: true,message:'输入用户账号',trigger:'blur'},
           {min:2,max:10,message:'长度在2到10个字符',trigger: 'blur'}
         ],
@@ -53,12 +53,13 @@ export default {
     //   });
     // },
     login() {
-      this.request.post("user/login",this.loginForm).then(res=>{
+      this.request.post("admin/login",this.loginForm).then(res=>{
         if(res.code === '200'){
+          localStorage.setItem("admin", JSON.stringify(res.data))  // 存储用户信息到浏览器
           this.$message.success("登录成功")
           this.$router.push("/")
         }else{
-          this.$message.error("错误")
+          this.$message.error(res.msg)
         }
       })
     }
