@@ -36,12 +36,12 @@
       <el-row :gutter="24">
         <el-col :span="8">
           <el-card>
-            <div id="lineOfUsers" style="width: 450px; height: 350px"></div>
+            <div id="lineOfUsers" style="width: 450px; height: 320px"></div>
           </el-card>
         </el-col>
         <el-col :span="8">
           <el-card>
-            <div id="userPie" style="width: 450px; height: 350px"></div>
+            <div id="userPie" style="width: 450px; height: 320px"></div>
           </el-card>
         </el-col>
         <el-col :span="8">

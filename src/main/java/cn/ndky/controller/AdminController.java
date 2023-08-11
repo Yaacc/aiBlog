@@ -126,6 +126,13 @@ public class AdminController{
         log.info("查询的id：{}", id);
         return Result.success(adminService.getById(id));
     }
+    // 按用户名查询
+//    @GetMapping("/username/{username}")
+//    public Result findByUsername(@PathVariable String username) {
+//        QueryWrapper<Admin> queryWrapper = new QueryWrapper<>();
+//        queryWrapper.eq("username", username);
+//        return Result.success(adminService.getOne(queryWrapper));
+//    }
 
     @DeleteMapping("/{id}")
     public Result<?> update(@PathVariable Integer id) {
