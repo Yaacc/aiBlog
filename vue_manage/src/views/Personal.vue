@@ -62,7 +62,7 @@ export default {
       return (await  this.request.get("/admin/"+ this.admin.id)).data
     },
     save() {
-      this.request.post("/admin", this.form).then(res => {
+      this.request.post("/admin/update", this.form).then(res => {
         if (res.code === '200') {
           this.$message.success("保存成功")
 

@@ -92,15 +92,23 @@ public class AdminController{
         return Result.success("添加成功");
     }*/
     //修改员工信息
-    @PutMapping
+    @PostMapping("/update")
     public Result<?> update(@RequestBody Admin admin){
         adminService.updateById(admin);
         return Result.success("修改信息成功");
     }
-
-    /*
+    @PostMapping("/password")
+    public Result<?> password(@RequestBody AdminPasswordDTO adminPasswordDTO) {
+//        adminPasswordDTO.setPassword(SecureUtil.md5(adminPasswordDTO.getPassword()));     // md5加密
+//        adminPasswordDTO.setNewPassword(SecureUtil.md5(adminPasswordDTO.getNewPassword()));
+        adminPasswordDTO.setPassword(adminPasswordDTO.getPassword());
+        adminPasswordDTO.setNewPassword(adminPasswordDTO.getNewPassword());
+        adminService.updatePassword(adminPasswordDTO);
+        return Result.success();
+    }
+    /**
     * 注册
-    * */
+    */
     // 新增或更新
     @PostMapping
     public Result<?> saveAndUpdate(@RequestBody Admin admin){

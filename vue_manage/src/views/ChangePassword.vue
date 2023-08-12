@@ -5,14 +5,14 @@
       <el-form-item label="管理员编号">
         <el-input v-model="form.adminNumber" disabled autocomplete="off"></el-input>
       </el-form-item>
-      <el-form-item label="旧密码">
-        <el-input v-model="form.password"></el-input>
+      <el-form-item label="旧密码" prop="password">
+        <el-input v-model="form.password" autocomplete="off" show-password></el-input>
       </el-form-item>
-      <el-form-item label="新密码">
-        <el-input v-model="form.newPassword"></el-input>
+      <el-form-item label="新密码" prop="newPassword">
+        <el-input v-model="form.newPassword" autocomplete="off" show-password></el-input>
       </el-form-item>
-      <el-form-item label="确认新密码">
-        <el-input v-model="form.confirmPassword"></el-input>
+      <el-form-item label="确认新密码" prop="confirmPassword">
+        <el-input v-model="form.confirmPassword" autocomplete="off" show-password></el-input>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="save">确 定</el-button>
@@ -61,7 +61,7 @@ export default {
               this.$message.success("修改成功，请重新登录")
               this.$router.push("/")
             } else {
-              this.$message.error("错误")
+              this.$message.error(res.msg)
             }
           })
         }
