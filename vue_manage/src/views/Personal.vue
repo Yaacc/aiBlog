@@ -1,11 +1,11 @@
 <template>
-  <el-card style="width: 600px;">
+  <el-card style="width: 600px; margin: 0 auto">
     <h1>Personal Information</h1>
     <h2>个人信息</h2>
     <el-form label-width="100px">
       <el-upload
         class="avatar-uploader"
-        :action="'http://localhost/file/upload'"
+        :action="'http://localhost/files/upload'"
         :show-file-list="false"
         :on-success="handleAvatarSuccess"
       >
@@ -62,12 +62,12 @@ export default {
       return (await  this.request.get("/admin/"+ this.admin.id)).data
     },
     save() {
-      this.request.post("/admin", this.form).then(res => {
+      this.request.post("/admin/update", this.form).then(res => {
         if (res.code === '200') {
           this.$message.success("保存成功")
 
           // 触发父级更新User的方法
-          this.$emit("refreshUser")
+          this.$emit("refreshAdmin")
 
           // 更新浏览器存储的用户信息
           this.getAdmin().then(res => {

@@ -1,5 +1,6 @@
 package cn.ndky.service;
 
+import cn.ndky.controller.AdminPasswordDTO;
 import cn.ndky.entity.Admin;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -12,5 +13,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @since 2023-07-31
  */
 public interface IAdminService extends IService<Admin> {
-
+    void updatePassword(AdminPasswordDTO userPasswordDTO);
 }
