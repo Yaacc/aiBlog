@@ -9,6 +9,7 @@ import cn.ndky.config.Result;
 import cn.ndky.entity.Admin;
 import cn.ndky.entity.User;
 import cn.ndky.service.IAdminService;
+import cn.ndky.utils.RandomNameUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -59,14 +60,12 @@ public class AdminController{
         request.getSession().setAttribute("adminParam",admin.getId());
         return Result.success(admin);
     }
-
     //登出功能
     @PostMapping("/logout")
     public Result<?> logout(HttpServletRequest request) {
         request.getSession().removeAttribute("adminParam");
         return Result.success("退出成功");
     }
-
     //分页查询
     @GetMapping("/page")
     public Result<?> findPage(@RequestParam Integer pageNum,
@@ -84,7 +83,6 @@ public class AdminController{
         IPage<Admin> page1 = adminService.page(page, queryWrapper);
         return Result.success(page1);
     }
-
     //添加管理员
     /*@PostMapping
     public Result<?> save(@RequestBody Admin admin){
@@ -100,21 +98,27 @@ public class AdminController{
         return Result.success("修改信息成功");
     }
 
-    @PostMapping("/password")
-    public Result<?> password(@RequestBody AdminPasswordDTO adminPasswordDTO) {
-//        adminPasswordDTO.setPassword(SecureUtil.md5(adminPasswordDTO.getPassword()));     // md5加密
-//        adminPasswordDTO.setNewPassword(SecureUtil.md5(adminPasswordDTO.getNewPassword()));
-        adminPasswordDTO.setPassword(adminPasswordDTO.getPassword());
-        adminPasswordDTO.setNewPassword(adminPasswordDTO.getNewPassword());
-        adminService.updatePassword(adminPasswordDTO);
-        return Result.success();
-    }
+    /*
+    * 注册
+    * */
     // 新增或更新
     @PostMapping
     public Result<?> saveAndUpdate(@RequestBody Admin admin){
-        if(admin.getId() == null && admin.getPassword() == null){
+        QueryWrapper<Admin> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("adminNumber", admin.getAdminNumber());
+        Admin one= adminService.getOne(queryWrapper);
+        if(one!=null){
+            return Result.error(Constants.CODE_400,"账号已存在");
+        }
+        else {
+            if(admin.getId() == null && admin.getPassword() == null){
 //            user.setPassword(SecureUtil.md5("123"));
-            admin.setPassword("123");
+                admin.setPassword("123");
+            }
+            if(admin.getUsername()==null){
+                RandomNameUtil randomNameUtil = new RandomNameUtil();
+                admin.setUsername(RandomNameUtil.getStringRandom(10));
+            }
         }
         return Result.success(adminService.saveOrUpdate(admin));
     }
