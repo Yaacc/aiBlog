@@ -18,7 +18,7 @@
         <i class="el-icon-arrow-down"></i>
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item @click.native="personal()">个人信息</el-dropdown-item>
-          <el-dropdown-item @click.native="ChangePassword()">修改密码</el-dropdown-item>
+          <el-dropdown-item @click.native="changePassword()">修改密码</el-dropdown-item>
           <el-dropdown-item @click.native="logout()">退出</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
@@ -41,13 +41,13 @@ export default {
   methods: {
     logout() {
       localStorage.clear();
-      this.$router.push("Login" );
+      this.$router.push("/");
     },
     personal(){
       this.$router.push("Personal");
     },
-    ChangePassword(){
-      this.$router.push("ChangPassWord");
+    changePassword(){
+      this.$router.push("ChangePassword");
     }
   },
 }

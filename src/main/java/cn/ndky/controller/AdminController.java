@@ -99,6 +99,16 @@ public class AdminController{
         adminService.updateById(admin);
         return Result.success("修改信息成功");
     }
+
+    @PostMapping("/password")
+    public Result<?> password(@RequestBody AdminPasswordDTO adminPasswordDTO) {
+//        adminPasswordDTO.setPassword(SecureUtil.md5(adminPasswordDTO.getPassword()));     // md5加密
+//        adminPasswordDTO.setNewPassword(SecureUtil.md5(adminPasswordDTO.getNewPassword()));
+        adminPasswordDTO.setPassword(adminPasswordDTO.getPassword());
+        adminPasswordDTO.setNewPassword(adminPasswordDTO.getNewPassword());
+        adminService.updatePassword(adminPasswordDTO);
+        return Result.success();
+    }
     // 新增或更新
     @PostMapping
     public Result<?> saveAndUpdate(@RequestBody Admin admin){

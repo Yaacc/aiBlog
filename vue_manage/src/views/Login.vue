@@ -57,7 +57,7 @@ export default {
         if(res.code === '200'){
           localStorage.setItem("admin", JSON.stringify(res.data))  // 存储用户信息到浏览器
           this.$message.success("登录成功")
-          this.$router.push("/")
+          this.$router.push("/manage")
         }else{
           this.$message.error(res.msg)
         }

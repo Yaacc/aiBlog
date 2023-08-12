@@ -18,7 +18,7 @@
       <img src="../assets/logo.png" alt="">
       <span v-show="menuHeader">后台管理系统</span>
     </div>
-    <el-menu-item index="/">
+    <el-menu-item index="/home">
       <i class="el-icon-house"></i>
       <span slot="title">主页</span>
     </el-menu-item>
