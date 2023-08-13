@@ -104,7 +104,7 @@ public class AdminController{
         adminPasswordDTO.setPassword(adminPasswordDTO.getPassword());
         adminPasswordDTO.setNewPassword(adminPasswordDTO.getNewPassword());
         adminService.updatePassword(adminPasswordDTO);
-        return Result.success();
+        return Result.success("修改密码成功,请重新登录");
     }
     /**
     * 注册

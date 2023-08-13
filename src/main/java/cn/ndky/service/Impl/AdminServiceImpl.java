@@ -28,10 +28,10 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
     @Resource
     private AdminMapper adminMapper;
     @Override
-    public void updatePassword(AdminPasswordDTO adminPasswordDTO) {
+    public void updatePassword(AdminPasswordDTO adminPasswordDTO)throws ServiceException{
         int update = adminMapper.updatePassword(adminPasswordDTO);
         if (update < 1) {
-            throw new ServiceException(Constants.CODE_600, "密码错误");
+           throw new ServiceException(Constants.CODE_600, "旧密码错误，请重新输入");
         }
     }
 }
