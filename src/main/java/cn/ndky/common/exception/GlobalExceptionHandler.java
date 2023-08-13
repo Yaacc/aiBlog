@@ -27,4 +27,10 @@ public class GlobalExceptionHandler {
         //如果是别的错误那我也没招儿了
         return Result.error("-1","未知错误");
     }
+    @ExceptionHandler(ServiceException.class)
+    public Result<?> exceptionHandler(ServiceException ex){
+        log.error(ex.getMessage());
+        return Result.error(ex.getCode(),ex.getMessage());
+    }
+
 }

@@ -58,7 +58,7 @@ export default {
           }
           this.request.post("/admin/password", this.form).then(res => {
             if (res.code === '200') {
-              this.$message.success("修改成功，请重新登录")
+              this.$message.success(res.msg)
               this.$router.push("/")
             } else {
               this.$message.error(res.msg)
