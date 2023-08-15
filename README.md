@@ -7,6 +7,30 @@
 [IDEA创建Maven项目报错- Error injecting constructor, java.lang.NoSuchMethodError: org.apache.maven.model](https://blog.csdn.net/qq_44605463/article/details/123803362)
 
 # mysql
+## tb_article
+```mysql
+SET NAMES utf8mb4;
+SET FOREIGN_KEY_CHECKS = 0;
+
+-- ----------------------------
+-- Table structure for tb_article
+-- ----------------------------
+DROP TABLE IF EXISTS `tb_article`;
+CREATE TABLE `tb_article`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '文章编号',
+  `user` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '发布人',
+  `name` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '标题',
+  `content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '内容',
+  `time` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '发布时间',
+  `like` int(11) NULL DEFAULT NULL COMMENT '点赞',
+  `collect` int(11) NULL DEFAULT NULL COMMENT '收藏',
+  `is_delete` tinyint(1) NULL DEFAULT NULL COMMENT '1删除',
+  `enable` tinyint(1) NULL DEFAULT NULL COMMENT '1启用',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Compact;
+
+SET FOREIGN_KEY_CHECKS = 1;
+```
 ## tb_files
 ```mysql
 SET NAMES utf8mb4;
