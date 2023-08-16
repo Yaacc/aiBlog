@@ -111,7 +111,6 @@ public class FilesController {
 
     /**
      * 按序号删除
-     * 建议使用假删除
      */
     @DeleteMapping("/{id}")
     public Result<?> delete(@PathVariable Integer id) {
@@ -122,7 +121,6 @@ public class FilesController {
 
     /**
      * 批量删除
-     * 建议使用假删除
      */
     @PostMapping("/del/batch")
     public Result<?> deleteBatch(@RequestBody List<Integer> ids){
@@ -161,7 +159,7 @@ public class FilesController {
     }
 
     /**
-     * 分页查询 http://localhost/page?pageNum=1&pageSize=2
+     * 分页查询 http://localhost/files/page?pageNum=1&pageSize=2
      */
     @GetMapping("/page")
     public Result<?> findPage(@RequestParam Integer pageNum,
