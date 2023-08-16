@@ -38,7 +38,7 @@ public class Article implements Serializable {
       private String time;
 
       @ApiModelProperty("点赞")
-      private Integer like;
+      private Integer likes;
 
       @ApiModelProperty("收藏")
       private Integer collect;
@@ -90,12 +90,12 @@ public class Article implements Serializable {
           this.time = time;
       }
     
-    public Integer getLike() {
-        return like;
+    public Integer getLikes() {
+        return likes;
     }
 
-      public void setLike(Integer like) {
-          this.like = like;
+      public void setLikes(Integer like) {
+          this.likes = like;
       }
     
     public Integer getCollect() {
@@ -130,7 +130,7 @@ public class Article implements Serializable {
                   ", name=" + name +
                   ", content=" + content +
                   ", time=" + time +
-                  ", like=" + like +
+                  ", likes=" + likes +
                   ", collect=" + collect +
                   ", isDelete=" + isDelete +
                   ", enable=" + enable +

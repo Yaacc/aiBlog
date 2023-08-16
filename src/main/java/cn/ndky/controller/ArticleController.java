@@ -1,19 +1,16 @@
 package cn.ndky.controller;
 
 
-import cn.hutool.core.date.DateUnit;
 import cn.hutool.core.date.DateUtil;
 import cn.ndky.config.Result;
 import cn.ndky.entity.Article;
-import cn.ndky.entity.Files;
 import cn.ndky.mapper.ArticleMapper;
 import cn.ndky.service.IArticleService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import org.springframework.stereotype.Controller;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -26,7 +23,8 @@ import java.util.List;
  * @author yaacc
  * @since 2023-08-15
  */
-@Controller
+@Slf4j
+@RestController
 @RequestMapping("/article")
 public class ArticleController {
     @Autowired
