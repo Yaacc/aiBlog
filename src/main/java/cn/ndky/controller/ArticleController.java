@@ -5,7 +5,6 @@ import cn.hutool.core.date.DateUnit;
 import cn.hutool.core.date.DateUtil;
 import cn.ndky.config.Result;
 import cn.ndky.entity.Article;
-import cn.ndky.entity.Files;
 import cn.ndky.mapper.ArticleMapper;
 import cn.ndky.service.IArticleService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -26,7 +25,7 @@ import java.util.List;
  * @author yaacc
  * @since 2023-08-15
  */
-@Controller
+@RestController
 @RequestMapping("/article")
 public class ArticleController {
     @Autowired
@@ -45,10 +44,16 @@ public class ArticleController {
         articleService.saveOrUpdate(article);
         return Result.success();
     }
+
+    @PostMapping("/update")
+    public Result<?> saveAndUpdate(@RequestBody Article article){
+
+        return Result.success(articleMapper.updateById(article));
+    }
     /**
      * 获取文件总数
      */
-    @GetMapping("/total")
+   @GetMapping("/total")
     public Result<?> getNumberOfArticles(){
         return Result.success(articleService.count());
     }
