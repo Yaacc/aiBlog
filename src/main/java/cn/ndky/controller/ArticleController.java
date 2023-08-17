@@ -4,6 +4,7 @@ package cn.ndky.controller;
 import cn.hutool.core.date.DateUtil;
 import cn.ndky.config.Result;
 import cn.ndky.entity.Article;
+import cn.ndky.entity.Files;
 import cn.ndky.mapper.ArticleMapper;
 import cn.ndky.service.IArticleService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -50,6 +51,14 @@ public class ArticleController {
     public Result<?> getNumberOfArticles(){
         return Result.success(articleService.count());
     }
+
+    /**
+     * 更新（文章启用）
+     */
+    @PostMapping("/update")
+    public Result<?> saveAndUpdate(@RequestBody Article article){
+        return Result.success(articleService.updateById(article));
+    }
     /**
      * 按序号删除
      */
@@ -59,7 +68,6 @@ public class ArticleController {
         article.setIsDelete(true);
         return Result.success(articleMapper.updateById(article));
     }
-
     /**
      * 批量删除
      */

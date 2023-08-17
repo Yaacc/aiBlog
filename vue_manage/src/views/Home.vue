@@ -149,7 +149,7 @@ export default {
         }
       ]
     };
-    this.request.get("/echarts/maleOrFemale").then(res=>{
+    this.request.get("/echarts/maleOrFemale").then(res => {
       pieOption.series[0].data = [
         {value: res.data[0], name: '男性'},
         {value: res.data[1], name: '女性'},
@@ -164,6 +164,10 @@ export default {
         console.log(res)
         this.numberOfUsers = res.data
       })
+      this.request.get("/article/total").then(res => {
+        console.log(res)
+        this.numberOfDocument = res.data
+      })
       // 更新文件数量
       this.request.get("/files/total").then(res => {
         console.log(res)
@@ -177,6 +181,7 @@ export default {
 .el-row {
   margin-bottom: 40px;
 }
+
 .el-row :last-child {
   margin-bottom: 0;
 }
@@ -184,9 +189,11 @@ export default {
 .el-col {
   border-radius: 10px;
 }
-.el-card{
+
+.el-card {
   /*background-color: #d4d9e1;*/
 }
+
 .card-name {
   text-align: center;
   font-size: 18px;
@@ -199,7 +206,8 @@ export default {
   font-size: 18px;
   font-weight: bold;
 }
-.ele-shadow{
+
+.ele-shadow {
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1)
 }
 </style>

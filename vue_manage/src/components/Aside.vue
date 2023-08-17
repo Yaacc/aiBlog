@@ -32,6 +32,7 @@
         <el-menu-item index="/user">用户管理</el-menu-item>
         <el-menu-item index="/admin">管理员管理</el-menu-item>
         <el-menu-item index="/files">文件管理</el-menu-item>
+        <el-menu-item index="/article">文章管理</el-menu-item>
 
 <!--      </el-menu-item-group>-->
     </el-submenu>

@@ -15,6 +15,7 @@ const routes = [
       { path: '/admin', name: 'Admin',component:()=>import('../views/Admin.vue')},
       { path: '/personal',name: 'Personal',component:()=>import('../views/Personal')},
       { path: '/files',name: 'Files',component:()=>import('../views/Files.vue')},
+      { path: '/article',name: 'Article',component:()=>import('../views/Article.vue')},
       { path: '/ChangePassword',name: 'ChangePassword',component:()=>import('../views/ChangePassword.vue')}
     ]
   },
