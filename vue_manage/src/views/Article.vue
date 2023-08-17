@@ -1,22 +1,30 @@
 <template>
   <div>
     <div class="button-left">
+<!--      <el-upload action="http://localhost/files/upload"-->
+<!--                 :show-file-list="false"-->
+<!--                 :on-success="handleFileUploadSuccess"-->
+<!--                 style="display: inline-block">-->
+<!--        <el-button type="primary" class="ml10px" icon="el-icon-upload el-icon&#45;&#45;right" plain>上传文件</el-button>-->
+<!--      </el-upload>-->
       <el-popconfirm
         class="ml10px"
-        confirm-button-text="确定"
-        cancel-button-text="取消"
+        confirm-button-text='确定'
+        cancel-button-text='取消'
         icon="el-icon-info"
         icon-color="red"
-        title="确定批量删除这些数据吗？"
-        @confirm="delBatch">
+        title="您确定批量删除这些数据吗？"
+        @confirm="delBatch"
+      >
         <el-button type="danger" icon="el-icon-delete" slot="reference" plain>批量删除</el-button>
       </el-popconfirm>
+
     </div>
     <div class="search-input">
       <div class="input-suffix">
         <el-input
-          placeholder="输入文章标题"
-          v-model="searchName"
+          placeholder="输入文章名称"
+          v-model="searchArticleName"
           clearable
           style="width: 180px">
           <i slot="prefix" class="el-input__icon el-icon-search"></i>
@@ -25,15 +33,30 @@
       <el-button :loading="isLoading" @click="load" type="primary" icon="el-icon-search">搜索</el-button>
       <el-button @click="reset">重置</el-button>
     </div>
-    <!--    表格-->
+
     <el-table :data="tableData" stripe @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55"></el-table-column>
-      <el-table-column prop="id" label="ID" width="60"></el-table-column>
-      <el-table-column prop="user" label="发布人编号"></el-table-column>
-      <el-table-column prop="name" label="标题" ></el-table-column>
-      <el-table-column prop="time" label="发布时间" ></el-table-column>
-      <el-table-column prop="likes" label="点赞数" ></el-table-column>
-      <el-table-column prop="collect" label="收藏数" ></el-table-column>
+      <el-table-column prop="id" label="ID" width="80" align="center"></el-table-column>
+      <el-table-column prop="user" label="作者" width="80" align="center"></el-table-column>
+      <el-table-column prop="name" label="文章名称" align="center"></el-table-column>
+      <el-table-column prop="likes" label="点赞数" align="center"></el-table-column>
+      <el-table-column prop="collect" label="收藏数" align="center"></el-table-column>
+<!--      <el-table-column label="预览" align="center">-->
+<!--        <template slot-scope="scope">-->
+<!--          <el-button type="primary"-->
+<!--                     size="mini"-->
+<!--                     plain-->
+<!--                     @click="preview(scope.row.url)">预览</el-button>-->
+<!--        </template>-->
+<!--      </el-table-column>-->
+<!--      <el-table-column label="下载" align="center">-->
+<!--        <template slot-scope="scope">-->
+<!--          <el-button type="primary"-->
+<!--                     size="mini"-->
+<!--                     plain-->
+<!--                     @click="download(scope.row.url)">下载</el-button>-->
+<!--        </template>-->
+<!--      </el-table-column>-->
       <el-table-column label="启用">
         <template slot-scope="scope">
           <el-switch v-model="scope.row.enable"
@@ -42,23 +65,25 @@
                      @change="changeEnable(scope.row)"></el-switch>
         </template>
       </el-table-column>
-      <el-table-column prop="action" label="操作"  fixed="right">
+      <el-table-column label="操作" width="200" align="center">
         <template slot-scope="scope">
           <el-popconfirm
-            class="ml-5px"
-            confirm-button-text="确定"
-            cancel-button-text="取消"
+            class="ml10px"
+            confirm-button-text='确定'
+            cancel-button-text='我再想想'
             icon="el-icon-info"
             icon-color="red"
-            title="确定"
-            @confirm="del(scope.row.id)">
-            <el-button size="mini" type="danger" slot="reference" plain>删除</el-button>
+            title="您确定删除吗？"
+            @confirm="del(scope.row.id)"
+          >
+            <el-button type="danger"
+                       size="mini"
+                       plain
+                       slot="reference">删除<i class="el-icon-remove-outline"></i></el-button>
           </el-popconfirm>
         </template>
       </el-table-column>
     </el-table>
-    <!--    表格-->
-    <!--    分页栏-->
     <div class="block">
       <el-pagination
         background
@@ -71,49 +96,48 @@
         :total="total">
       </el-pagination>
     </div>
-    <!--    分页栏-->
-    <!--    dialog-->
   </div>
-  <!--  main-->
 </template>
 
 <script>
 export default {
-  name: "Article.vue",
-  data() {
-    return {
+  name: "Article",
+  data(){
+    return{
       tableData: [],
-      total: 0,
-      currentPage: 1,
+      name: '',
+      multipleSelection: [],
       pageNum: 1,
       pageSize: 5,
-      searchName: '', // 搜索框
-      multipleSelection: [],
-      isLoading: false,
-      formLabelWidth: '80px'
+      total: 0,
+      currentPage: 1,
+      searchArticleName: '', // 搜索框
+      isLoading:false,
     }
   },
   created() {
     this.load()
   },
-  methods: {
-    load() {
-      this.request.get("/article/page", {
+  methods:{
+    load(){
+      this.request.get("/article/page",{
         params: {
           pageNum: this.pageNum,
           pageSize: this.pageSize,
-          name: this.searchName,
+          name: this.searchArticleName,
         }
-      }).then(res => {
+
+      }).then(res=>{
         console.log(res)
         this.tableData = res.data.records
         this.total = res.data.total
       })
     },
     reset() {
-      this.searchName = ""
+      this.searchArticleName = ""
       this.load()
     },
+
     // 按序号删除
     del(id){
       this.request.delete("/article/"+id).then(res =>{
@@ -137,16 +161,13 @@ export default {
         }
       })
     },
-    handleSelectionChange(val) {
-      this.multipleSelection = val;
-    },
-    handleEdit(index, row) {
-      this.form=row;
-      this.dialogFormVisible=true;
-      console.log(index, row);
-    },
-    handleDelete(index, row) {
-      console.log(index, row);
+
+    changeEnable(row){
+      this.request.post("/article/update",row).then(res=>{
+        if(res.code==='200'){
+          this.$message.success("操作成功")
+        }
+      })
     },
     handleSizeChange(pageSize) {
       console.log(`每页 ${pageSize} 条`)
@@ -157,8 +178,16 @@ export default {
       console.log(`当前页: ${pageNum}`)
       this.pageNum = pageNum
       this.load()
-    }
-  }
+    },
+    handleSelectionChange(val) {
+      this.multipleSelection = val;
+    },
+    // handleFileUploadSuccess(res) {
+    //   console.log(res)
+    //   this.$message.success("上传成功")
+    //   this.load()
+    // },
+  },
 }
 </script>
 

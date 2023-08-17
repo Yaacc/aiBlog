@@ -94,8 +94,8 @@ public class Article implements Serializable {
         return likes;
     }
 
-      public void setLikes(Integer likes) {
-          this.likes = likes;
+      public void setLikes(Integer like) {
+          this.likes = like;
       }
     
     public Integer getCollect() {

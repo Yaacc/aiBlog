@@ -22,7 +22,7 @@ CREATE TABLE `tb_article`  (
   `name` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '标题',
   `content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '内容',
   `time` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '发布时间',
-  `like` int(11) NULL DEFAULT NULL COMMENT '点赞',
+  `likes` int(11) NULL DEFAULT NULL COMMENT '点赞',
   `collect` int(11) NULL DEFAULT NULL COMMENT '收藏',
   `is_delete` tinyint(1) NULL DEFAULT NULL COMMENT '1删除',
   `enable` tinyint(1) NULL DEFAULT NULL COMMENT '1启用',
