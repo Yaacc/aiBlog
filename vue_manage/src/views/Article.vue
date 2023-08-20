@@ -1,6 +1,7 @@
 <template>
   <div>
     <div class="button-left">
+      <el-button type="success" icon="el-icon-edit" @click="dialogFormVisible=true">发布</el-button>
 <!--      <el-upload action="http://localhost/files/upload"-->
 <!--                 :show-file-list="false"-->
 <!--                 :on-success="handleFileUploadSuccess"-->
@@ -57,6 +58,14 @@
 <!--                     @click="download(scope.row.url)">下载</el-button>-->
 <!--        </template>-->
 <!--      </el-table-column>-->
+      <el-table-column label="预览" align="center">
+        <template slot-scope="scope">
+          <el-button type="primary"
+                     size="mini"
+                     plain
+                     @click="preview(scope.row)">预览</el-button>
+        </template>
+      </el-table-column>
       <el-table-column label="启用">
         <template slot-scope="scope">
           <el-switch v-model="scope.row.enable"
@@ -96,14 +105,63 @@
         :total="total">
       </el-pagination>
     </div>
+    <!--    对话框-->
+    <div>
+      <el-dialog title="发表文章" :visible.sync="dialogFormVisible" width="40%" center>
+        <el-form :model="form">
+          <el-form-item label="标题" >
+            <el-input v-model="form.name" autocomplete="off"></el-input>
+          </el-form-item>
+<!--          <el-form-item label="内容" :label-width="formLabelWidth">
+            <el-input v-model="form.content" autocomplete="off"></el-input>
+          </el-form-item>-->
+          <el-form-item label="作者">
+            <el-input  v-model="form.user" disabled autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="文章内容" >
+            <el-input type="textarea" v-model="form.content"></el-input>
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="dialogFormVisible = false">取 消</el-button>
+          <el-button type="primary" @click="save">确 定</el-button>
+        </div>
+      </el-dialog>
+    </div>
+
+    <div>
+      <el-dialog title="查看文章" :visible.sync="dialogFormVisibles" width="40%" center>
+        <el-form :model="forms">
+          <el-form-item label="标题" >
+            <el-input v-model="forms.name" disabled autocomplete="off" ></el-input>
+          </el-form-item>
+          <!--          <el-form-item label="内容" :label-width="formLabelWidth">
+                      <el-input v-model="form.content" autocomplete="off"></el-input>
+                    </el-form-item>-->
+          <el-form-item label="作者">
+            <el-input  v-model="forms.user" disabled autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="文章内容" >
+            <el-input type="textarea" v-model="forms.content" disabled autocomplete="off"></el-input>
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="dialogFormVisibles = false">返回</el-button>
+<!--          <el-button type="primary" @click="save">确 定</el-button>-->
+        </div>
+      </el-dialog>
+    </div>
   </div>
 </template>
 
 <script>
+import admin from "./Admin";
+
 export default {
   name: "Article",
   data(){
     return{
+      admin: localStorage.getItem("admin") ? JSON.parse(localStorage.getItem("admin")) : {},
       tableData: [],
       name: '',
       multipleSelection: [],
@@ -111,11 +169,26 @@ export default {
       pageSize: 5,
       total: 0,
       currentPage: 1,
+      dialogFormVisible: false,
+      dialogFormVisibles: false,
       searchArticleName: '', // 搜索框
       isLoading:false,
+      visible:true,
+      form: {
+        name: '',
+        content: '',
+        user:'',
+      },
+      forms: {
+        name: '',
+        content: '',
+        user:'',
+      },
+      formLabelWidth: '80px',
     }
   },
   created() {
+    this.form.user=this.admin.adminNumber
     this.load()
   },
   methods:{
@@ -161,6 +234,18 @@ export default {
         }
       })
     },
+    // 新增
+    save(){
+      this.request.post("/article/publish",this.form).then(res=>{
+        if(res.code === '200'){
+          this.$message.success("发布成功")
+          this.dialogFormVisible = false
+          this.reset();
+        }else{
+          this.$message.error("保存失败")
+        }
+      })
+    },
 
     changeEnable(row){
       this.request.post("/article/update",row).then(res=>{
@@ -187,6 +272,13 @@ export default {
     //   this.$message.success("上传成功")
     //   this.load()
     // },
+
+    preview(article){
+      this.forms.user=article.user
+      this.forms.name=article.name
+      this.forms.content=article.content
+      this.dialogFormVisibles=true
+    }
   },
 }
 </script>

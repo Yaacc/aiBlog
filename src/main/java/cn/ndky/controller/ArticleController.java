@@ -3,10 +3,12 @@ package cn.ndky.controller;
 
 import cn.hutool.core.date.DateUtil;
 import cn.ndky.config.Result;
+import cn.ndky.entity.Admin;
 import cn.ndky.entity.Article;
 import cn.ndky.entity.Files;
 import cn.ndky.mapper.ArticleMapper;
 import cn.ndky.service.IArticleService;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.extern.slf4j.Slf4j;
@@ -35,6 +37,19 @@ public class ArticleController {
     private ArticleMapper articleMapper;
 
 
+    /**
+    * 发布文章
+    * */
+    @PostMapping("/publish")
+    public Result<?> publishArticle(@RequestBody Article article)
+    {
+        article.setUser(article.getUser());
+        article.setCollect(0);
+        article.setLikes(0);
+        article.setTime(DateUtil.now());
+        articleService.saveOrUpdate(article);
+        return Result.success("发布成功");
+    }
     @PostMapping
     public Result<?> save(@RequestBody Article article){
         if(article.getId()==null){
