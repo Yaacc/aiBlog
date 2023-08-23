@@ -1,6 +1,6 @@
 package cn.ndky.mapper;
 
-import cn.ndky.controller.AdminPasswordDTO;
+import cn.ndky.controller.dto.AdminPasswordDTO;
 import cn.ndky.entity.Admin;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Update;

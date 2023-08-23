@@ -5,6 +5,22 @@
 [IDEA fork别人的GitHub项目、保持代码同步、开发并pull request](https://blog.csdn.net/qq_39618369/article/details/108758462)
 
 [IDEA创建Maven项目报错- Error injecting constructor, java.lang.NoSuchMethodError: org.apache.maven.model](https://blog.csdn.net/qq_44605463/article/details/123803362)
+# mysql
+## tb_like
+```mysql
+SET FOREIGN_KEY_CHECKS=0;
+
+-- ----------------------------
+-- Table structure for `tb_like`
+-- ----------------------------
+DROP TABLE IF EXISTS `tb_like`;
+CREATE TABLE `tb_like` (
+`id` int(11) NOT NULL AUTO_INCREMENT,
+`userId` int(11) DEFAULT NULL COMMENT '用户',
+`articleId` int(11) DEFAULT NULL COMMENT '文章',
+PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=69 DEFAULT CHARSET=latin1;
+```
 
 # mysql
 ## tb_article

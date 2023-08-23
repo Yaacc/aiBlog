@@ -1,15 +1,17 @@
 package cn.ndky.controller;
 
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.poi.excel.ExcelReader;
 import cn.hutool.poi.excel.ExcelUtil;
 import cn.hutool.poi.excel.ExcelWriter;
 import cn.ndky.common.Constants;
 import cn.ndky.config.Result;
+import cn.ndky.controller.dto.AdminPasswordDTO;
 import cn.ndky.entity.Admin;
-import cn.ndky.entity.User;
 import cn.ndky.service.IAdminService;
 import cn.ndky.utils.RandomNameUtil;
+import cn.ndky.utils.TokenUtils;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -24,9 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.InputStream;
 import java.net.URLEncoder;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 
 
 /**
@@ -46,7 +46,7 @@ public class AdminController{
 
     //登入功能
     @PostMapping("/login")
-    public Result<?> login(HttpServletRequest request, @RequestBody Admin adminParam) {
+    public Result<?> login(HttpServletRequest request, @RequestBody AdminPasswordDTO adminParam) {
         String password=adminParam.getPassword();
         LambdaQueryWrapper<Admin> lqw=new LambdaQueryWrapper<>();
         lqw.eq(Admin::getAdminNumber, adminParam.getAdminNumber());
@@ -57,9 +57,13 @@ public class AdminController{
         if(!admin.getPassword().equals(password)){
             return Result.error(Constants.CODE_400,"用户名或密码错误");
         }
-        request.getSession().setAttribute("adminParam",admin.getId());
-        return Result.success(admin);
+        BeanUtil.copyProperties(admin,adminParam , true);
+        String token = TokenUtils.genToken(admin.getId().toString(), admin.getPassword());
+        adminParam.setToken(token);
+        //request.getSession().setAttribute("adminParam",admin.getId());
+        return Result.success(adminParam);
     }
+
     //登出功能
     @PostMapping("/logout")
     public Result<?> logout(HttpServletRequest request) {
@@ -68,7 +72,8 @@ public class AdminController{
     }
     //分页查询
     @GetMapping("/page")
-    public Result<?> findPage(@RequestParam Integer pageNum,
+    public Result<?> findPage(HttpServletRequest request,
+            @RequestParam Integer pageNum,
                               @RequestParam Integer pageSize,
                               @RequestParam(defaultValue = "") String username,
                               @RequestParam(defaultValue = "") String realName){

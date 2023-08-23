@@ -5,10 +5,11 @@ import cn.hutool.core.date.DateUtil;
 import cn.ndky.config.Result;
 import cn.ndky.entity.Admin;
 import cn.ndky.entity.Article;
-import cn.ndky.entity.Files;
+import cn.ndky.entity.Like;
 import cn.ndky.mapper.ArticleMapper;
+import cn.ndky.mapper.LikeMapper;
 import cn.ndky.service.IArticleService;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import cn.ndky.utils.TokenUtils;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.extern.slf4j.Slf4j;
@@ -34,6 +35,8 @@ public class ArticleController {
     private IArticleService articleService;
 
     @Resource
+    private LikeMapper likeMapper;
+    @Resource
     private ArticleMapper articleMapper;
 
 
@@ -49,6 +52,45 @@ public class ArticleController {
         article.setTime(DateUtil.now());
         articleService.saveOrUpdate(article);
         return Result.success("发布成功");
+    }
+    /**
+     * 点赞
+     * */
+    @PostMapping("/likes/{id}")
+    public Result<?> likeArticle(@PathVariable Integer id) {
+        // Get current user ID from authentication context
+        Admin currentAdmin = TokenUtils.getCurrentAdmin();
+        articleService.likeArticle(currentAdmin.getId(),id);
+        Article article = articleMapper.selectById(id);
+        if(article!=null){
+            article.setLikes(article.getLikes()+1);
+            articleMapper.updateById(article);
+        }
+        return Result.success("点赞成功");
+    }
+    @GetMapping("/isLike/{articleId}")
+    public Result<?> isLike(@PathVariable Integer articleId){
+        Admin currentAdmin = TokenUtils.getCurrentAdmin();
+        QueryWrapper<Like> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("userId",currentAdmin.getId());
+        queryWrapper.eq("articleId",articleId);
+        Like like = likeMapper.selectOne(queryWrapper);
+        if(like!=null){
+           return Result.success("已点赞");
+        }
+       return null;
+    }
+    @DeleteMapping("/likes/{articleId}")
+    public Result<?> unlikeArticle(@PathVariable Integer articleId) {
+        // Get current user ID from authentication context
+        Admin currentAdmin = TokenUtils.getCurrentAdmin();
+        articleService.unlikeArticle(currentAdmin.getId(),articleId);
+        Article article = articleMapper.selectById(articleId);
+        if(article!=null){
+            article.setLikes(article.getLikes()-1);
+            articleMapper.updateById(article);
+        }
+        return Result.success("取消点赞");
     }
     @PostMapping
     public Result<?> save(@RequestBody Article article){
