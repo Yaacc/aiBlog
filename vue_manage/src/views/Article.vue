@@ -149,6 +149,12 @@
           <el-button @click="dialogFormVisibles = false">返回</el-button>
 <!--          <el-button type="primary" @click="save">确 定</el-button>-->
         </div>
+        <div>
+            <button @click="LikeArticle(forms)" :class="{ liked: liked }">
+              {{ liked ? 'Unlike' : 'Like' }}
+            </button>
+            <span>{{ forms.likes }}</span>
+        </div>
       </el-dialog>
     </div>
   </div>
@@ -175,16 +181,21 @@ export default {
       isLoading:false,
       visible:true,
       form: {
+        id:0,
         name: '',
         content: '',
         user:'',
+        likes:0,
       },
       forms: {
+        id:0,
         name: '',
         content: '',
         user:'',
+        likes:0,
       },
       formLabelWidth: '80px',
+      liked:false,
     }
   },
   created() {
@@ -210,7 +221,17 @@ export default {
       this.searchArticleName = ""
       this.load()
     },
-
+    //是否已点赞
+    isLike(id){
+      this.request.get("/article/isLike/"+id).then(res=>{
+        if(res.code==='200'){
+          this.liked = true;
+        }else {
+          this.liked = false;
+        }
+        this.load()
+      })
+    },
     // 按序号删除
     del(id){
       this.request.delete("/article/"+id).then(res =>{
@@ -246,7 +267,33 @@ export default {
         }
       })
     },
+    LikeArticle(row){
+      if(this.liked===false){
+        this.request.post("/article/likes/"+row.id,row).then(res=>{
+          if(res.code==='200'){
+            this.$message.success("点赞成功")
+            this.load()
+            row.likes=row.likes+1
+            this.preview(row)
+          }else{
+            this.$message.error("点赞失败")
+          }
+        })
+      }
+      else {
+        this.request.delete("/article/likes/"+row.id,row).then(res=>{
+          if(res.code==='200'){
+            this.$message.success("取消点赞")
+            this.load()
+            row.likes=row.likes-1
+            this.preview(row)
+          }else{
+            this.$message.error("点赞取消失败")
+          }
+        })
+      }
 
+    },
     changeEnable(row){
       this.request.post("/article/update",row).then(res=>{
         if(res.code==='200'){
@@ -277,12 +324,20 @@ export default {
       this.forms.user=article.user
       this.forms.name=article.name
       this.forms.content=article.content
+      this.forms.id=article.id;
+      this.forms.likes=article.likes
+      this.isLike(article.id)
       this.dialogFormVisibles=true
+      //this.preview(article)
+      this.load()
     }
   },
 }
 </script>
 
 <style scoped>
-
+.liked {
+  color: red;
+  font-weight: bold;
+}
 </style>

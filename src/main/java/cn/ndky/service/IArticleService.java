@@ -12,5 +12,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @since 2023-08-15
  */
 public interface IArticleService extends IService<Article> {
+    void likeArticle(Integer userId, Integer articleId);
 
+    void unlikeArticle(Integer userId, Integer articleId);
 }

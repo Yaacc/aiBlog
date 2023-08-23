@@ -1,6 +1,6 @@
 package cn.ndky.service;
 
-import cn.ndky.controller.AdminPasswordDTO;
+import cn.ndky.controller.dto.AdminPasswordDTO;
 import cn.ndky.entity.Admin;
 import com.baomidou.mybatisplus.extension.service.IService;
 
