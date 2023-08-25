@@ -5,7 +5,7 @@
       <div style="margin: 20px 0;text-align:center;font-size: 24px">登录</div>
       <el-form :model="loginForm" :rules="rules">
         <el-form-item prop="userNumber">
-          <el-input size="medium" style="margin: 10px 0" prefix-icon="el-icon-user" v-model="loginForm.adminNumber"></el-input>
+          <el-input size="medium" style="margin: 10px 0" prefix-icon="el-icon-user" v-model="loginForm.userNumber"></el-input>
         </el-form-item>
         <el-form-item prop="password">
           <el-input size="medium" style="margin: 10px 0" prefix-icon="el-icon-lock" v-model="loginForm.password" show-password></el-input>
@@ -25,11 +25,11 @@ export default {
   data() {
     return {
       loginForm: {
-        adminNumber: '',
+        userNumber: '',
         password:''
       },
       rules: {
-        adminNumber:[
+        userNumber:[
           {required: true,message:'输入用户账号',trigger:'blur'},
           {min:2,max:10,message:'长度在2到10个字符',trigger: 'blur'}
         ],
@@ -53,12 +53,15 @@ export default {
     //   });
     // },
     login() {
-      this.request.post("admin/login",this.loginForm).then(res=>{
-        if(res.code === '200'){
-          localStorage.setItem("admin", JSON.stringify(res.data))  // 存储用户信息到浏览器
+      this.request.post("user/login",this.loginForm).then(res=>{
+        if(res.code === '0'){
+          localStorage.setItem("user", JSON.stringify(res.data))  // 存储用户信息到浏览器
           this.$message.success("登录成功")
           this.$router.push("/manage")
-        }else{
+        }else if(res.code === '1'){
+          this.$message.error("权限不足")
+        }
+        else {
           this.$message.error(res.msg)
         }
       })

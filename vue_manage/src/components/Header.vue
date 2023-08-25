@@ -13,7 +13,7 @@
     <div class="header-userInfo">
       <el-avatar style="vertical-align: middle;margin-right: 8px;"
                  src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"></el-avatar>
-      <span style="margin-right: 12px; font-size: 16px;">{{ admin.username }}</span>
+      <span style="margin-right: 12px; font-size: 16px;">{{ user.username }}</span>
       <el-dropdown>
         <i class="el-icon-arrow-down"></i>
         <el-dropdown-menu slot="dropdown">
@@ -35,7 +35,7 @@ export default {
   },
   data(){
     return{
-      admin:localStorage.getItem("admin") ? JSON.parse(localStorage.getItem("admin")):{}
+     user:localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")):{}
     }
   },
   methods: {

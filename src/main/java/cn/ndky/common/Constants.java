@@ -8,4 +8,8 @@ public interface Constants {
     String CODE_400="400";  // 参数错误
 
     String CODE_600="600";  // 其它错误
+
+    String CODE_0="0";  //管理员
+    String CODE_1="1";  //用户
+
 }

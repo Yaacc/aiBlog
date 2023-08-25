@@ -3,9 +3,9 @@ package cn.ndky.controller;
 
 import cn.hutool.core.date.DateUtil;
 import cn.ndky.config.Result;
-import cn.ndky.entity.Admin;
 import cn.ndky.entity.Article;
 import cn.ndky.entity.Like;
+import cn.ndky.entity.User;
 import cn.ndky.mapper.ArticleMapper;
 import cn.ndky.mapper.LikeMapper;
 import cn.ndky.service.IArticleService;
@@ -59,8 +59,8 @@ public class ArticleController {
     @PostMapping("/likes/{id}")
     public Result<?> likeArticle(@PathVariable Integer id) {
         // Get current user ID from authentication context
-        Admin currentAdmin = TokenUtils.getCurrentAdmin();
-        articleService.likeArticle(currentAdmin.getId(),id);
+        User currentUser = TokenUtils.getCurrentUser();
+        articleService.likeArticle(currentUser.getId(),id);
         Article article = articleMapper.selectById(id);
         if(article!=null){
             article.setLikes(article.getLikes()+1);
@@ -70,9 +70,9 @@ public class ArticleController {
     }
     @GetMapping("/isLike/{articleId}")
     public Result<?> isLike(@PathVariable Integer articleId){
-        Admin currentAdmin = TokenUtils.getCurrentAdmin();
+        User currentUser = TokenUtils.getCurrentUser();
         QueryWrapper<Like> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("userId",currentAdmin.getId());
+        queryWrapper.eq("userId",currentUser.getId());
         queryWrapper.eq("articleId",articleId);
         Like like = likeMapper.selectOne(queryWrapper);
         if(like!=null){
@@ -83,8 +83,8 @@ public class ArticleController {
     @DeleteMapping("/likes/{articleId}")
     public Result<?> unlikeArticle(@PathVariable Integer articleId) {
         // Get current user ID from authentication context
-        Admin currentAdmin = TokenUtils.getCurrentAdmin();
-        articleService.unlikeArticle(currentAdmin.getId(),articleId);
+        User currentUser = TokenUtils.getCurrentUser();
+        articleService.unlikeArticle(currentUser.getId(),articleId);
         Article article = articleMapper.selectById(articleId);
         if(article!=null){
             article.setLikes(article.getLikes()-1);

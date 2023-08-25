@@ -1,22 +1,26 @@
 <template>
   <div class="wrapper">
-    <div style="margin: 100px auto; background-color: #fff; width: 400px; height: 500px; padding: 20px; border-radius: 10px">
+    <div style="margin: 100px auto; background-color: #fff; width: 400px; height: 600px; padding: 20px; border-radius: 10px">
       <div style="margin: 20px 0; text-align: center; font-size: 24px"><b>注 册</b></div>
-      <el-form :model="admin" :rules="rules" ref="adminForm">
+      <el-form :model="user" :rules="rules" ref="userForm">
         <el-form-item prop="userNumber">
-          <el-input placeholder="请输入账号" size="medium" style="margin: 5px 0" prefix-icon="el-icon-user" v-model="admin.adminNumber"></el-input>
+          <el-input placeholder="请输入账号" size="medium" style="margin: 5px 0" prefix-icon="el-icon-user" v-model="user.userNumber"></el-input>
         </el-form-item>
         <el-form-item prop="realName">
-          <el-input placeholder="请输入名字" size="medium" style="margin: 5px 0" prefix-icon="el-icon-user" v-model="admin.realName"></el-input>
+          <el-input placeholder="请输入名字" size="medium" style="margin: 5px 0" prefix-icon="el-icon-user" v-model="user.realName"></el-input>
+        </el-form-item>
+        <el-form-item prop="sex" style="margin: 0 30px">
+          <el-radio v-model="user.sex" label="男">男</el-radio>
+          <el-radio v-model="user.sex" label="女">女</el-radio>
         </el-form-item>
         <el-form-item prop="idcard">
-          <el-input placeholder="请输入身份证号" size="medium" style="margin: 5px 0" prefix-icon="el-icon-user" v-model="admin.idcard"></el-input>
+          <el-input placeholder="请输入身份证号" size="medium" style="margin: 5px 0" prefix-icon="el-icon-user" v-model="user.idcard"></el-input>
         </el-form-item>
         <el-form-item prop="password">
-          <el-input placeholder="请输入密码" size="medium" style="margin: 5px 0" prefix-icon="el-icon-lock" show-password v-model="admin.password"></el-input>
+          <el-input placeholder="请输入密码" size="medium" style="margin: 5px 0" prefix-icon="el-icon-lock" show-password v-model="user.password"></el-input>
         </el-form-item>
-        <el-form-item prop="confirmPassword">
-          <el-input placeholder="请确认密码" size="medium" style="margin: 5px 0" prefix-icon="el-icon-lock" show-password v-model="admin.confirmPassword"></el-input>
+        <el-form-item prop="confirmPassword" >
+          <el-input placeholder="请确认密码" size="medium" style="margin: 5px 0" prefix-icon="el-icon-lock" show-password v-model="user.confirmPassword"></el-input>
         </el-form-item>
         <el-form-item style="margin: 5px 0; text-align: right">
           <el-button type="primary" size="small"  autocomplete="off" @click="login">注册</el-button>
@@ -32,9 +36,14 @@ export default {
   name: "Login",
   data() {
     return {
-      admin: {},
+      user: {sex:'男'},
+      form1: {
+        roleName:'administrator',
+        roleCode:'0',
+        roleNote:'',
+      },
       rules: {
-        adminNumber:[
+        userNumber:[
           { required: true, message: '请输入账号', trigger: 'blur' },
           { min: 5, max: 10, message: '长度在 5 到 10 个字符', trigger: 'blur' }
         ],
@@ -59,13 +68,15 @@ export default {
   },
   methods: {
     login() {
-      this.$refs['adminForm'].validate((valid) => {
+      this.$refs['userForm'].validate((valid) => {
         if (valid) {  // 表单校验合法
-          if (this.admin.password !== this.admin.confirmPassword) {
+          if (this.user.password !== this.user.confirmPassword) {
             this.$message.error("两次输入的密码不一致")
             return false
           }
-          this.request.post("/admin", this.admin).then(res => {
+          const dataToSend = { ...this.user };
+          delete dataToSend.confirmPassword;
+          this.request.post("/user/register", {user : dataToSend,role:this.form1}).then(res => {
             if(res.code === '200') {
               this.$message.success("注册成功")
               this.$router.push('/')

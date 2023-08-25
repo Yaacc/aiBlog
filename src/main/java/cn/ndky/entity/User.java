@@ -8,6 +8,9 @@ import java.io.Serializable;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * <p>
@@ -17,6 +20,9 @@ import io.swagger.annotations.ApiModelProperty;
  * @author yaacc
  * @since 2023-07-31
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @TableName("tb_user")
 @ApiModel(value = "User对象", description = "")
 public class User implements Serializable {
@@ -24,7 +30,7 @@ public class User implements Serializable {
     private static final long serialVersionUID = 1L;
 
       @ApiModelProperty("序号")
-        @TableId(value = "id", type = IdType.AUTO)
+      @TableId(value = "id", type = IdType.AUTO)
       private Integer id;
 
       @ApiModelProperty("用户编号")
@@ -55,80 +61,8 @@ public class User implements Serializable {
       @TableField("IDCard")
       private String IDCard;
 
-
-    public Integer getId() {
-        return id;
-    }
-
-      public void setId(Integer id) {
-          this.id = id;
-      }
-    
-    public String getUserNumber() {
-        return userNumber;
-    }
-
-      public void setUserNumber(String userNumber) {
-          this.userNumber = userNumber;
-      }
-    
-    public String getUsername() {
-        return username;
-    }
-
-      public void setUsername(String username) {
-          this.username = username;
-      }
-    
-    public String getPassword() {
-        return password;
-    }
-
-      public void setPassword(String password) {
-          this.password = password;
-      }
-    
-    public String getRealName() {
-        return realName;
-    }
-
-      public void setRealName(String realName) {
-          this.realName = realName;
-      }
-    
-    public String getSex() {
-        return sex;
-    }
-
-      public void setSex(String sex) {
-          this.sex = sex;
-      }
-    
-    public Integer getAge() {
-        return age;
-    }
-
-      public void setAge(Integer age) {
-          this.age = age;
-      }
-    
-    public String getPhone() {
-        return phone;
-    }
-
-      public void setPhone(String phone) {
-          this.phone = phone;
-      }
-    
-    public String getIDCard() {
-        return IDCard;
-    }
-
-      public void setIDCard(String IDCard) {
-          this.IDCard = IDCard;
-      }
-
-
+      @ApiModelProperty("角色Id")
+      private Integer roleId;
     @Override
     public String toString() {
         return "Employee{" +

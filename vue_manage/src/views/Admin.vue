@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="button-left">
-      <el-button type="success" icon="el-icon-edit" @click="dialogFormVisible=true">新增</el-button>
+      <el-button type="success" icon="el-icon-edit" @click="dialogFormVisible=true,temp=false">新增</el-button>
       <el-popconfirm
         class="ml10px"
         confirm-button-text="确定"
@@ -12,9 +12,8 @@
         @confirm="delBatch">
         <el-button type="danger" icon="el-icon-delete" slot="reference" plain>批量删除</el-button>
       </el-popconfirm>
-
       <!--        :action="'http://'+localhost+'/user/import'"-->
-      <el-upload action="http://localhost/admin/import"
+      <el-upload action="http://localhost/user/admin/import"
                  :show-file-list="false" accept="xlsx"
                  :on-success="handleExcelImportSuccess"
                  style="display: inline-block"
@@ -23,9 +22,7 @@
       >
         <el-button type="primary" plain>导入<i class="el-icon-upload el-icon--right"></i></el-button>
       </el-upload>
-
-      <el-button type="primary" @click="exp" plain>导出<i class="el-icon-download el-icon--right"></i></el-button>
-
+      <el-button type="primary" @click="exp" class="ml10px" plain>导出<i class="el-icon-download el-icon--right"></i></el-button>
     </div>
     <div class="search-input">
       <div class="input-suffix">
@@ -51,11 +48,12 @@
     <el-table :data="tableData" stripe @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55"></el-table-column>
       <el-table-column prop="id" label="ID" width="60"></el-table-column>
-      <el-table-column prop="adminNumber" label="管理员编号" width="120"></el-table-column>
+      <el-table-column prop="userNumber" label="编号" width="120"></el-table-column>
       <el-table-column prop="username" label="用户名" width="120"></el-table-column>
       <el-table-column prop="realName" label="真实姓名" width="120"></el-table-column>
       <el-table-column prop="sex" label="性别" width="80"></el-table-column>
       <el-table-column prop="age" label="年龄" width="80"></el-table-column>
+      <el-table-column prop="phone" label="联系电话" width="160"></el-table-column>
       <el-table-column prop="idcard" label="身份证号"></el-table-column>
       <el-table-column prop="action" label="操作" width="200" fixed="right">
         <template slot-scope="scope">
@@ -63,7 +61,7 @@
             size="mini"
             type="success"
             plain
-            @click="handleEdit(scope.$index, scope.row)">编辑
+            @click="handleEdit(scope.$index, scope.row),temp=true">编辑
           </el-button>
           <el-popconfirm
             class="ml-5px"
@@ -97,8 +95,8 @@
     <div>
       <el-dialog title="用户信息" :visible.sync="dialogFormVisible" width="40%" center>
         <el-form :model="form">
-          <el-form-item label="管理员编号" :label-width="formLabelWidth">
-            <el-input v-model="form.adminNumber" autocomplete="off"></el-input>
+          <el-form-item label="编号" :label-width="formLabelWidth">
+            <el-input v-model="form.userNumber" autocomplete="off" :disabled="temp"></el-input>
           </el-form-item>
           <el-form-item label="用户名" :label-width="formLabelWidth">
             <el-input v-model="form.username" autocomplete="off"></el-input>
@@ -111,6 +109,9 @@
           </el-form-item>
           <el-form-item label="年龄" :label-width="formLabelWidth">
             <el-input v-model="form.age" autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="联系电话" :label-width="formLabelWidth">
+            <el-input v-model="form.phone" autocomplete="off"></el-input>
           </el-form-item>
           <el-form-item label="身份证号" :label-width="formLabelWidth">
             <el-input v-model="form.idcard" autocomplete="off"></el-input>
@@ -136,21 +137,27 @@ export default {
       total: 0,
       currentPage: 1,
       pageNum: 1,
-      pageSize: 5,
+      pageSize: 10,
       searchRealName: '', // 搜索框
       searchUserName: '',
       dialogFormVisible: false,
       isLoading: false,
       multipleSelection: [],
       form: {
-        adminNumber: '',
+        userNumber: '',
         username: '',
         realName: '',
         sex: '',
         age: '',
         idcard: ''
       },
-      formLabelWidth: '80px'
+      form1: {
+        roleName:'administrator',
+        roleCode:'0',
+        roleNote:'',
+      },
+      formLabelWidth: '80px',
+      temp:false
     }
   },
   created() {
@@ -162,7 +169,7 @@ export default {
   },
   methods: {
     load() {
-      this.request.get("/admin/page", {
+      this.request.get("/user/admin/page", {
         params: {
           pageNum: this.pageNum,
           pageSize: this.pageSize,
@@ -182,7 +189,7 @@ export default {
     },
     // 新增
     save(){
-      this.request.post("/admin",this.form).then(res=>{
+      this.request.post("/user",{user:this.form,role:this.form1}).then(res=>{
         if(res.code === '200'){
           this.$message.success("保存成功")
           this.dialogFormVisible = false
@@ -194,7 +201,7 @@ export default {
     },
     // 按序号删除
     del(id){
-      this.request.delete("/admin/"+id).then(res =>{
+      this.request.delete("/user/"+id).then(res =>{
         if(res.code === '200'){
           this.$message.success("删除成功")
           this.load()
@@ -206,7 +213,7 @@ export default {
     // 批量删除
     delBatch(){
       let ids = this.multipleSelection.map(value => value.id)
-      this.request.post("/admin/del/batch",ids).then(res =>{
+      this.request.post("/user/del/batch",ids).then(res =>{
         if(res.code==='200'){
           this.$message.success("批量删除成功")
           this.load()
@@ -217,7 +224,7 @@ export default {
     },
     // 导出
     exp(){
-      window.open('http://localhost/admin/export')
+      window.open('http://localhost/user/admin/export')
     },
     // 表格导入提醒
     handleExcelImportSuccess(){

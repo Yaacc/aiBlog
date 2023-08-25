@@ -3,9 +3,7 @@ package cn.ndky.utils;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 
-import cn.ndky.entity.Admin;
 import cn.ndky.entity.User;
-import cn.ndky.service.IAdminService;
 import cn.ndky.service.IUserService;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -22,22 +20,16 @@ import java.util.Date;
 public class TokenUtils {
 
     private static IUserService staticUserService;
-    private static IAdminService staticAdminService;
-
     @Resource
     private IUserService userService;
-    @Resource
-    private IAdminService adminService;
+
 
     @PostConstruct
     public void setUserService() {
         staticUserService = userService;
     }
 
-    @PostConstruct
-    public void setAdminService() {
-        staticAdminService = adminService;
-    }
+
 
     /**
      * 生成token
@@ -62,20 +54,6 @@ public class TokenUtils {
             if (StrUtil.isNotBlank(token)) {
                 String userId = JWT.decode(token).getAudience().get(0);
                 return staticUserService.getById(Integer.valueOf(userId));
-            }
-        } catch (Exception e) {
-            return null;
-        }
-        return null;
-    }
-
-    public static Admin getCurrentAdmin() {
-        try {
-            HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-            String token = request.getHeader("token");
-            if (StrUtil.isNotBlank(token)) {
-                String adminId = JWT.decode(token).getAudience().get(0);
-                return staticAdminService.getById(Integer.valueOf(adminId));
             }
         } catch (Exception e) {
             return null;

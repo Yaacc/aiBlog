@@ -3,7 +3,7 @@
     <h1>修改密码</h1>
     <el-form label-width="100px" :model="form" :rules="rules" ref="pass">
       <el-form-item label="管理员编号">
-        <el-input v-model="form.adminNumber" disabled autocomplete="off"></el-input>
+        <el-input v-model="form.userNumber" disabled autocomplete="off"></el-input>
       </el-form-item>
       <el-form-item label="旧密码" prop="password">
         <el-input v-model="form.password" autocomplete="off" show-password></el-input>
@@ -28,7 +28,7 @@ export default {
   data() {
     return {
       form: {},
-      admin: localStorage.getItem("admin") ? JSON.parse(localStorage.getItem("admin")) : {},
+      user: localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : {},
       rules: {
         password: [
           { required: true, message: '请输入原密码', trigger: 'blur' },
@@ -46,7 +46,7 @@ export default {
     }
   },
   created() {
-    this.form.adminNumber = this.admin.adminNumber
+    this.form.userNumber = this.user.userNumber
   },
   methods: {
     save() {
@@ -56,7 +56,7 @@ export default {
             this.$message.error("2次输入的新密码不相同")
             return false
           }
-          this.request.post("/admin/password", this.form).then(res => {
+          this.request.post("/user/password", this.form).then(res => {
             if (res.code === '200') {
               this.$message.success(res.msg)
               this.$router.push("/")

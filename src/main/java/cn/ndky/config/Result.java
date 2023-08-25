@@ -35,6 +35,13 @@ public class Result<T> {
         result.setData(data);
         return result;
     }
+    public static <T> Result<T> success(T data,String code) {
+        Result<T> result = new Result<>();
+        result.setCode(code);
+        result.setMsg("成功");
+        result.setData(data);
+        return result;
+    }
     public static Result error(String code, String msg) {
         Result result = new Result();
         result.setCode(code);

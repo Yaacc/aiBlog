@@ -3,8 +3,7 @@ package cn.ndky.config.Interceptor;
 import cn.hutool.core.util.StrUtil;
 import cn.ndky.common.Constants;
 import cn.ndky.common.exception.ServiceException;
-import cn.ndky.entity.Admin;
-import cn.ndky.service.IAdminService;
+import cn.ndky.entity.User;
 import cn.ndky.service.IUserService;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
@@ -22,10 +21,6 @@ public class JwtInterceptor implements HandlerInterceptor {
 
     @Autowired
     private IUserService userService;
-
-    @Autowired
-    private IAdminService adminService;
-
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         String token = request.getHeader("token");
@@ -38,19 +33,19 @@ public class JwtInterceptor implements HandlerInterceptor {
             throw new ServiceException(Constants.CODE_401, "无token，请重新登录");
         }
         // 获取 token 中的 user id
-        String adminId;
+        String userId;
         try {
-            adminId = JWT.decode(token).getAudience().get(0);
+            userId = JWT.decode(token).getAudience().get(0);
         } catch (JWTDecodeException j) {
             throw new ServiceException(Constants.CODE_401, "token验证失败，请重新登录");
         }
         // 根据token中的userid查询数据库
-        Admin admin=adminService.getById(adminId);
-        if (admin == null) {
+        User user = userService.getById(userId);
+        if (user == null) {
             throw new ServiceException(Constants.CODE_401, "用户不存在，请重新登录");
         }
         // 用户密码加签验证 token
-        JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC256(admin.getPassword())).build();
+        JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC256(user.getPassword())).build();
         try {
             jwtVerifier.verify(token); // 验证token
         } catch (JWTVerificationException e) {
