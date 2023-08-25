@@ -13,7 +13,7 @@
         <i v-else class="el-icon-plus avatar-uploader-icon"></i>
       </el-upload>
       <el-form-item label="管理员编号">
-        <el-input v-model="form.adminNumber" disabled autocomplete="off"></el-input>
+        <el-input v-model="form.userNumber" disabled autocomplete="off"></el-input>
       </el-form-item>
       <el-form-item label="用户名">
         <el-input v-model="form.username" autocomplete="off"></el-input>
@@ -27,6 +27,9 @@
       <el-form-item label="年龄">
         <el-input v-model="form.age" autocomplete="off"></el-input>
       </el-form-item>
+      <el-form-item label="电话号码">
+        <el-input v-model="form.phone" autocomplete="off"></el-input>
+      </el-form-item>
       <el-form-item label="身份证号码">
         <el-input v-model="form.idcard" autocomplete="off"></el-input>
       </el-form-item>
@@ -35,6 +38,7 @@
 <!--      </el-form-item>-->
       <el-form-item>
         <el-button type="primary" @click="save">确 定</el-button>
+        <el-button @click="$router.push('/manage') " >返回</el-button>
       </el-form-item>
     </el-form>
   </el-card>
@@ -46,7 +50,7 @@ export default {
   data() {
     return {
       form: {},
-      admin: localStorage.getItem("admin") ? JSON.parse(localStorage.getItem("admin")) : {}
+      user: localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : {}
     }
   },
   created() {
@@ -59,10 +63,10 @@ export default {
     async getAdmin() {
       // 通过用户名
       // return (await this.request.get("/admin/username/" + this.admin.username)).data
-      return (await  this.request.get("/admin/"+ this.admin.id)).data
+      return (await  this.request.get("/user/"+ this.user.id)).data
     },
     save() {
-      this.request.post("/admin/update", this.form).then(res => {
+      this.request.post("/user/update", this.form).then(res => {
         if (res.code === '200') {
           this.$message.success("保存成功")
 
@@ -71,8 +75,8 @@ export default {
 
           // 更新浏览器存储的用户信息
           this.getAdmin().then(res => {
-            res.token = JSON.parse(localStorage.getItem("admin")).token
-            localStorage.setItem("admin", JSON.stringify(res))
+            res.token = JSON.parse(localStorage.getItem("user")).token
+            localStorage.setItem("user", JSON.stringify(res))
           })
 
         } else {

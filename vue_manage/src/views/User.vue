@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="button-left">
-      <el-button type="success" icon="el-icon-edit" @click="dialogFormVisible=true">新增</el-button>
+      <el-button type="success" icon="el-icon-edit" @click="dialogFormVisible=true,temp=false">新增</el-button>
       <el-popconfirm
         class="ml10px"
         confirm-button-text="确定"
@@ -50,7 +50,7 @@
     <el-table :data="tableData" stripe @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55"></el-table-column>
       <el-table-column prop="id" label="ID" width="60"></el-table-column>
-      <el-table-column prop="userNumber" label="用户编号" width="120"></el-table-column>
+      <el-table-column prop="userNumber" label="编号" width="120"></el-table-column>
       <el-table-column prop="username" label="用户名" width="120"></el-table-column>
       <el-table-column prop="realName" label="真实姓名" width="120"></el-table-column>
       <el-table-column prop="sex" label="性别" width="80"></el-table-column>
@@ -65,7 +65,7 @@
             size="mini"
             type="success"
             plain
-            @click="handleEdit(scope.$index, scope.row)">编辑
+            @click="handleEdit(scope.$index, scope.row),temp=true">编辑
           </el-button>
           <el-popconfirm
             class="ml-5px"
@@ -96,8 +96,8 @@
     <div>
       <el-dialog title="用户信息" :visible.sync="dialogFormVisible" width="40%" center>
         <el-form :model="form">
-          <el-form-item label="用户编号" :label-width="formLabelWidth">
-            <el-input v-model="form.userNumber" autocomplete="off"></el-input>
+          <el-form-item label="编号" :label-width="formLabelWidth">
+            <el-input v-model="form.userNumber" :disabled="temp" autocomplete="off"></el-input>
           </el-form-item>
           <el-form-item label="用户名" :label-width="formLabelWidth">
             <el-input v-model="form.username" autocomplete="off"></el-input>
@@ -157,11 +157,18 @@ export default {
         sex: '',
         age: '',
         phone: '',
-        idcard: ''
+        idcard: '',
+
         // email: '',
         // address: ''
       },
-      formLabelWidth: '80px'
+      form1: {
+        roleName:'Regular users',
+        roleCode:'1',
+        roleNote:'',
+      },
+      formLabelWidth: '80px',
+      temp:false,
     }
   },
   created() {
@@ -194,7 +201,7 @@ export default {
     },
     // 新增
     save(){
-      this.request.post("/user",this.form).then(res=>{
+      this.request.post("/user",{user:this.form,role:this.form1}).then(res=>{
         if(res.code === '200'){
           this.$message.success("保存成功")
           this.dialogFormVisible = false

@@ -5,9 +5,30 @@
 [IDEA fork别人的GitHub项目、保持代码同步、开发并pull request](https://blog.csdn.net/qq_39618369/article/details/108758462)
 
 [IDEA创建Maven项目报错- Error injecting constructor, java.lang.NoSuchMethodError: org.apache.maven.model](https://blog.csdn.net/qq_44605463/article/details/123803362)
+
 # mysql
 ## tb_like
 ```mysql
+SET NAMES utf8mb4;
+SET FOREIGN_KEY_CHECKS=0;
+
+-- ----------------------------
+-- Table structure for `tb_role`
+-- ----------------------------
+DROP TABLE IF EXISTS `tb_role`;
+CREATE TABLE `tb_role` (
+`id` int(11) NOT NULL AUTO_INCREMENT,
+`role_name` varchar(20) DEFAULT NULL COMMENT '角色名称',
+`role_code` varchar(20) DEFAULT NULL COMMENT '角色编号',
+`role_note` varchar(64) DEFAULT NULL COMMENT '备注',
+PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=28 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Compact;
+
+```
+# mysql
+## tb_like
+```mysql
+SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS=0;
 
 -- ----------------------------
@@ -19,7 +40,7 @@ CREATE TABLE `tb_like` (
 `userId` int(11) DEFAULT NULL COMMENT '用户',
 `articleId` int(11) DEFAULT NULL COMMENT '文章',
 PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=69 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Compact;
 ```
 
 # mysql
@@ -120,26 +141,20 @@ SET FOREIGN_KEY_CHECKS = 0;
 -- Table structure for tb_user
 -- ----------------------------
 DROP TABLE IF EXISTS `tb_user`;
-CREATE TABLE `tb_user`  (
-  `id` int(5) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT COMMENT '序号',
-  `userNumber` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '用户编号',
-  `username` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '用户名',
-  `password` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '密码',
-  `realName` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '真实姓名',
-  `sex` varchar(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '性别',
-  `age` int(3) NULL DEFAULT NULL COMMENT '年龄',
-  `phone` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '联系电话',
-  `IDCard` varchar(18) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '身份证号',
-  `create_time` timestamp(0) NULL DEFAULT CURRENT_TIMESTAMP(0) COMMENT '创建时间',
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Compact;
-
--- ----------------------------
--- Records of tb_employee
--- ----------------------------
-INSERT INTO `tb_user` VALUES (00001, '2132', 'employee', '123', '小红', '女', 22, '10101010010', '123456789123456789', '2023-07-31 16:32:56');
-INSERT INTO `tb_user` VALUES (00002, 'w2321', 'w1', '123', '小白', NULL, NULL, '12345678910', '123456789123456789', '2023-07-31 16:37:14');
-INSERT INTO `tb_user` VALUES (00003, 'e3244', 'work1', '123', '小李', '男', 32, '11111000001', '12365498765432132X', '2023-07-31 16:44:38');
+CREATE TABLE `tb_user` (
+    `id` int(5) unsigned zerofill NOT NULL AUTO_INCREMENT COMMENT '序号',
+    `userNumber` varchar(20) NOT NULL COMMENT '员工编号',
+    `username` varchar(20) NOT NULL COMMENT '用户名',
+    `password` varchar(20) NOT NULL COMMENT '密码',
+    `realName` varchar(10) NOT NULL COMMENT '真实姓名',
+    `sex` varchar(1) DEFAULT NULL COMMENT '性别',
+    `age` int(3) DEFAULT NULL COMMENT '年龄',
+    `phone` varchar(20) DEFAULT NULL COMMENT '联系电话',
+    `IDCard` varchar(18) NOT NULL COMMENT '身份证号',
+    `create_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `role_id` int(11) DEFAULT NULL COMMENT '角色Id',
+    PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8mb4 ROW_FORMAT=COMPACT;
 
 SET FOREIGN_KEY_CHECKS = 1;
 ```
