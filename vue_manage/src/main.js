@@ -7,6 +7,7 @@ import 'element-ui/lib/theme-chalk/index.css';
 import './assets/style.css'
 import router from './router'
 import request from "./utils/request.js"
+import './assets/iconfont/iconfont.css';
 
 Vue.config.productionTip = false
 Vue.use(ElementUI);
