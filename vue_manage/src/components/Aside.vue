@@ -32,9 +32,20 @@
         <el-menu-item index="/user">用户管理</el-menu-item>
         <el-menu-item index="/admin">管理员管理</el-menu-item>
         <el-menu-item index="/files">文件管理</el-menu-item>
-        <el-menu-item index="/article">文章管理</el-menu-item>
+<!--        <el-menu-item index="/article">文章管理</el-menu-item>-->
 
 <!--      </el-menu-item-group>-->
+    </el-submenu>
+    <el-submenu index="3">
+      <template slot="title">
+        <i class="el-icon-document"></i>
+        <span slot="title">文章管理</span>
+      </template>
+      <!--      <el-menu-item-group>-->
+      <!--        <template slot="title">分组一</template>-->
+      <el-menu-item index="/article">官方文章列表</el-menu-item>
+      <el-menu-item index="/userArticle">用户文章列表</el-menu-item>
+      <!--      </el-menu-item-group>-->
     </el-submenu>
   </el-menu>
 </template>

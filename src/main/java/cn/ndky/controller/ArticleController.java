@@ -4,9 +4,11 @@ package cn.ndky.controller;
 import cn.hutool.core.date.DateUtil;
 import cn.ndky.config.Result;
 import cn.ndky.entity.Article;
+import cn.ndky.entity.Favorite;
 import cn.ndky.entity.Like;
 import cn.ndky.entity.User;
 import cn.ndky.mapper.ArticleMapper;
+import cn.ndky.mapper.FavoriteMapper;
 import cn.ndky.mapper.LikeMapper;
 import cn.ndky.service.IArticleService;
 import cn.ndky.utils.TokenUtils;
@@ -38,6 +40,9 @@ public class ArticleController {
     private LikeMapper likeMapper;
     @Resource
     private ArticleMapper articleMapper;
+
+    @Resource
+    private FavoriteMapper favoriteMapper;
 
 
     /**
@@ -146,13 +151,63 @@ public class ArticleController {
     public Result<?> findPage(@RequestParam Integer pageNum,
                               @RequestParam Integer pageSize,
                               @RequestParam(defaultValue = "") String name) {
-        QueryWrapper<Article> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("is_delete", false);
-        queryWrapper.orderByDesc("id");
-        if (!(name == null || "".equals(name))) {
-            queryWrapper.like("name", name);
+        Page<Article> page = new Page<>(pageNum, pageSize);
+        Page<Article> usersArticle = articleService.getUsersArticle(page,name);
+        return Result.success(usersArticle);
+    }
+    @GetMapping("/admin/page")
+    public Result<?> findAdminPage(@RequestParam Integer pageNum,
+                              @RequestParam Integer pageSize,
+                              @RequestParam(defaultValue = "") String name) {
+        Page<Article> page = new Page<>(pageNum, pageSize);
+        Page<Article> adminsArticle = articleService.getAdminArticle(page,name);
+        return Result.success(adminsArticle);
+    }
+
+    /**
+     * 用户收藏
+     * */
+    @PostMapping("/favorite/{articleId}")
+    public Result<?> favoriteArticle(@PathVariable Integer articleId) {
+        // Get current user ID from authentication context
+        User currentUser = TokenUtils.getCurrentUser();
+        articleService.favoriteArticle(currentUser.getId(), articleId);
+        Article article = articleMapper.selectById(articleId);
+        if(article!=null){
+            article.setCollect(article.getCollect()+1);
+            articleMapper.updateById(article);
         }
-        return Result.success(articleService.page(new Page<>(pageNum, pageSize), queryWrapper));
+        return Result.success("收藏成功");
+    }
+    /**
+     * 用户是否收藏
+     * */
+    @GetMapping("/isFavorite/{articleId}")
+    public Result<?> isFavorite(@PathVariable Integer articleId){
+        User currentUser = TokenUtils.getCurrentUser();
+        QueryWrapper<Favorite> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("userId",currentUser.getId());
+        queryWrapper.eq("articleId",articleId);
+        Favorite favorite = favoriteMapper.selectOne(queryWrapper);
+        if(favorite!=null){
+            return Result.success("已收藏");
+        }
+        return null;
+    }
+    /**
+     * 用户取消收藏
+     * */
+    @DeleteMapping("/favorite/{articleId}")
+    public Result<?> unFavoriteArticle(@PathVariable Integer articleId) {
+        // Get current user ID from authentication context
+        User currentUser = TokenUtils.getCurrentUser();
+        articleService.unFavoriteArticle(currentUser.getId(),articleId);
+        Article article = articleMapper.selectById(articleId);
+        if(article!=null){
+            article.setCollect(article.getCollect()-1);
+            articleMapper.updateById(article);
+        }
+        return Result.success("取消收藏");
     }
 }
 
