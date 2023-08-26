@@ -17,6 +17,8 @@ const routes = [
       { path: '/files',name: 'Files',component:()=>import('../views/Files.vue')},
       { path: '/article',name: 'Article',component:()=>import('../views/Article.vue')},
       { path: '/userArticle',name: 'UserArticle',component:()=>import('../views/UserArticle')},
+      { path: '/myArticle',name: 'MyArticle',component:()=>import('../views/MyArticle')},
+      { path: '/myCollection',name: 'MyCollection',component:()=>import('../views/MyCollection')},
       { path: '/ChangePassword',name: 'ChangePassword',component:()=>import('../views/ChangePassword.vue')},
 
     ]

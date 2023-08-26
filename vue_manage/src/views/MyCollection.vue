@@ -1,24 +1,17 @@
 <template>
   <div>
     <div class="button-left">
-      <el-button type="success" icon="el-icon-edit" @click="dialogFormVisible=true">发布</el-button>
-<!--      <el-upload action="http://localhost/files/upload"-->
-<!--                 :show-file-list="false"-->
-<!--                 :on-success="handleFileUploadSuccess"-->
-<!--                 style="display: inline-block">-->
-<!--        <el-button type="primary" class="ml10px" icon="el-icon-upload el-icon&#45;&#45;right" plain>上传文件</el-button>-->
-<!--      </el-upload>-->
-      <el-popconfirm
+<!--      <el-popconfirm
         class="ml10px"
         confirm-button-text='确定'
         cancel-button-text='取消'
         icon="el-icon-info"
         icon-color="red"
-        title="您确定批量删除这些数据吗？"
-        @confirm="delBatch"
+        title="您确定批量取消收藏这些数据吗？"
+        @confirm="unFavoriteArticle"
       >
-        <el-button type="danger" icon="el-icon-delete" slot="reference" plain>批量删除</el-button>
-      </el-popconfirm>
+        <el-button type="warning" icon="el-icon-remove-outline" slot="reference" plain>取消收藏</el-button>
+      </el-popconfirm>-->
 
     </div>
     <div class="search-input">
@@ -42,36 +35,12 @@
       <el-table-column prop="name" label="文章名称" align="center"></el-table-column>
       <el-table-column prop="likes" label="点赞数" align="center"></el-table-column>
       <el-table-column prop="collect" label="收藏数" align="center"></el-table-column>
-<!--      <el-table-column label="预览" align="center">-->
-<!--        <template slot-scope="scope">-->
-<!--          <el-button type="primary"-->
-<!--                     size="mini"-->
-<!--                     plain-->
-<!--                     @click="preview(scope.row.url)">预览</el-button>-->
-<!--        </template>-->
-<!--      </el-table-column>-->
-<!--      <el-table-column label="下载" align="center">-->
-<!--        <template slot-scope="scope">-->
-<!--          <el-button type="primary"-->
-<!--                     size="mini"-->
-<!--                     plain-->
-<!--                     @click="download(scope.row.url)">下载</el-button>-->
-<!--        </template>-->
-<!--      </el-table-column>-->
       <el-table-column label="预览" align="center">
         <template slot-scope="scope">
           <el-button type="primary"
                      size="mini"
                      plain
                      @click="preview(scope.row)">预览</el-button>
-        </template>
-      </el-table-column>
-      <el-table-column label="启用">
-        <template slot-scope="scope">
-          <el-switch v-model="scope.row.enable"
-                     active-color="#13ce66"
-                     inactive-color="#ccc"
-                     @change="changeEnable(scope.row)"></el-switch>
         </template>
       </el-table-column>
       <el-table-column label="操作" width="200" align="center">
@@ -82,13 +51,15 @@
             cancel-button-text='我再想想'
             icon="el-icon-info"
             icon-color="red"
-            title="您确定删除吗？"
-            @confirm="del(scope.row.id)"
+            title="您确定取消吗？"
+            @confirm="unFavoriteArticle(scope.row)"
           >
-            <el-button type="danger"
+<            <el-button
+            type="warning"
                        size="mini"
                        plain
-                       slot="reference">删除<i class="el-icon-remove-outline"></i></el-button>
+                       slot="reference">取消收藏<i class="el-icon-remove-outline"></i>
+            </el-button>
           </el-popconfirm>
         </template>
       </el-table-column>
@@ -112,9 +83,6 @@
           <el-form-item label="标题" >
             <el-input v-model="form.name" autocomplete="off"></el-input>
           </el-form-item>
-<!--          <el-form-item label="内容" :label-width="formLabelWidth">
-            <el-input v-model="form.content" autocomplete="off"></el-input>
-          </el-form-item>-->
           <el-form-item label="作者">
             <el-input  v-model="form.user" disabled autocomplete="off"></el-input>
           </el-form-item>
@@ -135,9 +103,6 @@
           <el-form-item label="标题" >
             <el-input v-model="forms.name" readonly="true" autocomplete="off" ></el-input>
           </el-form-item>
-          <!--          <el-form-item label="内容" :label-width="formLabelWidth">
-                      <el-input v-model="form.content" autocomplete="off"></el-input>
-                    </el-form-item>-->
           <el-form-item label="作者">
             <el-input  v-model="forms.user" readonly="true" autocomplete="off"></el-input>
           </el-form-item>
@@ -150,17 +115,9 @@
           <i :class="['iconfont',liked ? 'icon-dianzan' : 'icon-xihuan']" @click="LikeArticle(forms)"> <span class="fonts">{{ forms.likes }}</span></i>
         </div>
         <div slot="footer" class="dialog-footer">
-
           <el-button @click="dialogFormVisibles = false">返回</el-button>
 <!--          <el-button type="primary" @click="save">确 定</el-button>-->
         </div>
-<!--        <div>
-            <button @click="LikeArticle(forms)" :class="{ liked: liked }">
-              {{ liked ? 'Unlike' : 'Like' }}
-            </button>
-            <span>{{ forms.likes }}</span>
-        </div>-->
-
       </el-dialog>
     </div>
   </div>
@@ -168,7 +125,6 @@
 
 <script>
 import admin from "./Admin";
-
 export default {
   name: "Article",
   data(){
@@ -213,7 +169,7 @@ export default {
   },
   methods:{
     load(){
-      this.request.get("/article/admin/page",{
+      this.request.get("/article/myCollection/page",{
         params: {
           pageNum: this.pageNum,
           pageSize: this.pageSize,
@@ -328,17 +284,22 @@ export default {
         })
       }
       else {
-        this.request.delete("/article/favorite/"+row.id,row).then(res=>{
-          if(res.code==='200'){
-            this.$message.success("取消收藏")
-            this.load()
-            row.collect=row.collect-1
-            this.preview(row)
-          }else{
-            this.$message.error("收藏取消失败")
-          }
-        })
+        this.unFavoriteArticle(row)
       }
+    },
+    //取消收藏
+    unFavoriteArticle(row){
+      this.request.delete("/article/favorite/"+row.id,row).then(res=>{
+        if(res.code==='200'){
+          this.$message.success("取消收藏")
+          this.load()
+          row.collect=row.collect-1
+          //this.preview(row)
+        }else{
+          this.$message.error("收藏取消失败")
+        }
+      })
+
     },
     changeEnable(row){
       this.request.post("/article/update",row).then(res=>{
@@ -360,12 +321,6 @@ export default {
     handleSelectionChange(val) {
       this.multipleSelection = val;
     },
-    // handleFileUploadSuccess(res) {
-    //   console.log(res)
-    //   this.$message.success("上传成功")
-    //   this.load()
-    // },
-
     preview(article){
       this.forms.user=article.user
       this.forms.name=article.name

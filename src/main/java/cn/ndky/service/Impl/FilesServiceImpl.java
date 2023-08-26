@@ -16,5 +16,4 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class FilesServiceImpl extends ServiceImpl<FilesMapper, Files> implements IFilesService {
-
 }

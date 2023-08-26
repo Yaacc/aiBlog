@@ -1,13 +1,7 @@
 <template>
   <div>
     <div class="button-left">
-      <el-button type="success" icon="el-icon-edit" @click="dialogFormVisible=true">发布</el-button>
-<!--      <el-upload action="http://localhost/files/upload"-->
-<!--                 :show-file-list="false"-->
-<!--                 :on-success="handleFileUploadSuccess"-->
-<!--                 style="display: inline-block">-->
-<!--        <el-button type="primary" class="ml10px" icon="el-icon-upload el-icon&#45;&#45;right" plain>上传文件</el-button>-->
-<!--      </el-upload>-->
+      <el-button type="success" icon="el-icon-edit" @click="clc(),dialogFormVisible=true">发布</el-button>
       <el-popconfirm
         class="ml10px"
         confirm-button-text='确定'
@@ -42,22 +36,6 @@
       <el-table-column prop="name" label="文章名称" align="center"></el-table-column>
       <el-table-column prop="likes" label="点赞数" align="center"></el-table-column>
       <el-table-column prop="collect" label="收藏数" align="center"></el-table-column>
-<!--      <el-table-column label="预览" align="center">-->
-<!--        <template slot-scope="scope">-->
-<!--          <el-button type="primary"-->
-<!--                     size="mini"-->
-<!--                     plain-->
-<!--                     @click="preview(scope.row.url)">预览</el-button>-->
-<!--        </template>-->
-<!--      </el-table-column>-->
-<!--      <el-table-column label="下载" align="center">-->
-<!--        <template slot-scope="scope">-->
-<!--          <el-button type="primary"-->
-<!--                     size="mini"-->
-<!--                     plain-->
-<!--                     @click="download(scope.row.url)">下载</el-button>-->
-<!--        </template>-->
-<!--      </el-table-column>-->
       <el-table-column label="预览" align="center">
         <template slot-scope="scope">
           <el-button type="primary"
@@ -76,6 +54,12 @@
       </el-table-column>
       <el-table-column label="操作" width="200" align="center">
         <template slot-scope="scope">
+          <el-button
+            size="mini"
+            type="success"
+            plain
+            @click="assignment(scope.row),dialogFormVisible=true,temp=true">编辑
+          </el-button>
           <el-popconfirm
             class="ml10px"
             confirm-button-text='确定'
@@ -112,9 +96,6 @@
           <el-form-item label="标题" >
             <el-input v-model="form.name" autocomplete="off"></el-input>
           </el-form-item>
-<!--          <el-form-item label="内容" :label-width="formLabelWidth">
-            <el-input v-model="form.content" autocomplete="off"></el-input>
-          </el-form-item>-->
           <el-form-item label="作者">
             <el-input  v-model="form.user" disabled autocomplete="off"></el-input>
           </el-form-item>
@@ -124,7 +105,8 @@
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button @click="dialogFormVisible = false">取 消</el-button>
-          <el-button type="primary" @click="save">确 定</el-button>
+          <el-button v-if="temp" type="primary" @click="changeEnable(form)">确 定</el-button>
+          <el-button v-if="!temp" type="primary" @click="save">确 定</el-button>
         </div>
       </el-dialog>
     </div>
@@ -135,9 +117,6 @@
           <el-form-item label="标题" >
             <el-input v-model="forms.name" readonly="true" autocomplete="off" ></el-input>
           </el-form-item>
-          <!--          <el-form-item label="内容" :label-width="formLabelWidth">
-                      <el-input v-model="form.content" autocomplete="off"></el-input>
-                    </el-form-item>-->
           <el-form-item label="作者">
             <el-input  v-model="forms.user" readonly="true" autocomplete="off"></el-input>
           </el-form-item>
@@ -152,15 +131,8 @@
         <div slot="footer" class="dialog-footer">
 
           <el-button @click="dialogFormVisibles = false">返回</el-button>
-<!--          <el-button type="primary" @click="save">确 定</el-button>-->
+<!--          <el-button v-if="temp" type="primary" @click="changeEnable(forms)">确 定</el-button>-->
         </div>
-<!--        <div>
-            <button @click="LikeArticle(forms)" :class="{ liked: liked }">
-              {{ liked ? 'Unlike' : 'Like' }}
-            </button>
-            <span>{{ forms.likes }}</span>
-        </div>-->
-
       </el-dialog>
     </div>
   </div>
@@ -205,6 +177,7 @@ export default {
       formLabelWidth: '80px',
       liked:false,
       favorite:false,
+      temp:false
     }
   },
   created() {
@@ -213,7 +186,7 @@ export default {
   },
   methods:{
     load(){
-      this.request.get("/article/admin/page",{
+      this.request.get("/article/myArticle/page",{
         params: {
           pageNum: this.pageNum,
           pageSize: this.pageSize,
@@ -343,7 +316,9 @@ export default {
     changeEnable(row){
       this.request.post("/article/update",row).then(res=>{
         if(res.code==='200'){
-          this.$message.success("操作成功")
+          this.$message.success("修改成功")
+          this.dialogFormVisible = false
+          this.load()
         }
       })
     },
@@ -360,12 +335,16 @@ export default {
     handleSelectionChange(val) {
       this.multipleSelection = val;
     },
-    // handleFileUploadSuccess(res) {
-    //   console.log(res)
-    //   this.$message.success("上传成功")
-    //   this.load()
-    // },
-
+    assignment(article){
+      this.form.user=article.user
+      this.form.name=article.name
+      this.form.content=article.content
+      this.form.id=article.id;
+    },
+    clc(){
+      this.form.name=''
+      this.form.content=''
+    },
     preview(article){
       this.forms.user=article.user
       this.forms.name=article.name

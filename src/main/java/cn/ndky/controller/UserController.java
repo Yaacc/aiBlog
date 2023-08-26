@@ -211,20 +211,17 @@ public class UserController {
         Page<User> adminUsers = userService.getUsers(page,username,realName);
         return Result.success(adminUsers);
     }
-
     //修改员工信息
     @PutMapping
     public Result<?> update(@RequestBody User user){
         userService.updateById(user);
         return Result.success("修改信息成功");
     }
-
     // 查找所有
     @GetMapping("/all")
     public Result<?> findAll() {
         return Result.success(userService.list());
     }
-
     // 获取用户总数
     @GetMapping("/total")
     public Result<?> getNumberOfUsers(){
@@ -244,7 +241,6 @@ public class UserController {
         log.info("查询的id：{}", id);
         return Result.success(userService.getById(id));
     }
-
     // 新增或更新
     /*@PostMapping
     public Result<?> saveAndUpdate(@RequestBody User user){

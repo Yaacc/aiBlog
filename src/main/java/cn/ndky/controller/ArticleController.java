@@ -73,6 +73,9 @@ public class ArticleController {
         }
         return Result.success("点赞成功");
     }
+    /**
+     * 是否点赞
+     * */
     @GetMapping("/isLike/{articleId}")
     public Result<?> isLike(@PathVariable Integer articleId){
         User currentUser = TokenUtils.getCurrentUser();
@@ -85,6 +88,9 @@ public class ArticleController {
         }
        return null;
     }
+    /**
+     * 取消点赞
+     * */
     @DeleteMapping("/likes/{articleId}")
     public Result<?> unlikeArticle(@PathVariable Integer articleId) {
         // Get current user ID from authentication context
@@ -163,7 +169,28 @@ public class ArticleController {
         Page<Article> adminsArticle = articleService.getAdminArticle(page,name);
         return Result.success(adminsArticle);
     }
-
+    /**
+     * 查询我的文章
+     * */
+    @GetMapping("/myArticle/page")
+    public Result<?> getMyArticle(@RequestParam Integer pageNum,
+                                  @RequestParam Integer pageSize,
+                                  @RequestParam(defaultValue = "") String name){
+        Page<Article> page = new Page<>(pageNum, pageSize);
+        Page<Article> myArticle = articleService.getMyArticle(page,name);
+        return Result.success(myArticle);
+    }
+    /**
+     * 查询我的收藏
+     * */
+    @GetMapping("/myCollection/page")
+    public Result<?> getMyCollection(@RequestParam Integer pageNum,
+                                  @RequestParam Integer pageSize,
+                                  @RequestParam(defaultValue = "") String name){
+        Page<Article> page = new Page<>(pageNum, pageSize);
+        Page<Article> myCollection = articleService.getMyCollection(page,name);
+        return Result.success(myCollection);
+    }
     /**
      * 用户收藏
      * */
@@ -209,5 +236,6 @@ public class ArticleController {
         }
         return Result.success("取消收藏");
     }
+
 }
 
