@@ -25,4 +25,8 @@ public interface IArticleService extends IService<Article> {
     void favoriteArticle(Integer id, Integer articleId);
 
     void unFavoriteArticle(Integer id, Integer articleId);
+
+    Page<Article> getMyArticle(Page<Article> page, String name);
+
+    Page<Article> getMyCollection(Page<Article> page, String name);
 }
