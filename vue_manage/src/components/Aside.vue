@@ -46,6 +46,10 @@
           <el-menu-item index="/userArticle">用户文章列表</el-menu-item>
         </el-menu-item-group>
     </el-submenu>
+    <el-menu-item index="/comment">
+      <i class="el-icon-house"></i>
+      <span slot="title">反馈</span>
+    </el-menu-item>
     <el-submenu index="4">
       <template slot="title">
         <i class="el-icon-document"></i>
