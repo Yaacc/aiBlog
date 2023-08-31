@@ -20,6 +20,9 @@ const routes = [
       { path: '/myArticle',name: 'MyArticle',component:()=>import('../views/MyArticle')},
       { path: '/myCollection',name: 'MyCollection',component:()=>import('../views/MyCollection')},
       { path: '/ChangePassword',name: 'ChangePassword',component:()=>import('../views/ChangePassword.vue')},
+      { path: '/comment',name: 'Comment',component:()=>import('../views/Comment.vue')},
+
+
 
     ]
   },

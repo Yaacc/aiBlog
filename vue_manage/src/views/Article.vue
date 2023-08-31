@@ -132,42 +132,82 @@
     <div>
       <el-dialog title="查看文章" :visible.sync="dialogFormVisibles" width="40%" center>
         <el-form :model="forms">
-          <el-form-item label="标题" >
-            <el-input v-model="forms.name" readonly="true" autocomplete="off" ></el-input>
+          <el-form-item>
+            <h2 style="text-align: center">{{forms.name}}</h2>
+<!--            <el-input v-model="forms.name" readonly="true" autocomplete="off" ></el-input>-->
           </el-form-item>
-          <!--          <el-form-item label="内容" :label-width="formLabelWidth">
-                      <el-input v-model="form.content" autocomplete="off"></el-input>
-                    </el-form-item>-->
-          <el-form-item label="作者">
-            <el-input  v-model="forms.user" readonly="true" autocomplete="off"></el-input>
-          </el-form-item>
-          <el-form-item label="文章内容" >
-            <el-input  type="textarea" autosize v-model="forms.content" readonly="true" autocomplete="off"></el-input>
+
+            <h4 style="text-align: center"><span style="font-weight: bold">作者:</span>{{forms.user}}</h4>
+<!--            <el-input  v-model="forms.user" readonly="true" autocomplete="off"></el-input>-->
+          <el-form-item>
+            <el-input  type="textarea" autosize v-model="forms.content" readonly="true" autocomplete="off">
+            </el-input>
           </el-form-item>
         </el-form>
+
         <div id = "main">
           <i style="color: orange" :class="['iconfont',favorite ? 'icon-star__easyico' : 'icon-shoucang']" @click="FavoriteArticle(forms)"><span class="fonts">{{ forms.collect }}</span></i>
           <i :class="['iconfont',liked ? 'icon-dianzan' : 'icon-xihuan']" @click="LikeArticle(forms)"> <span class="fonts">{{ forms.likes }}</span></i>
         </div>
-        <div slot="footer" class="dialog-footer">
 
+
+        <el-card style="margin-top: 60px">
+          <div style="padding: 20px; color: #888">
+            <div>
+              <el-input type="textarea" :rows="3" v-model="entity.content"></el-input>
+              <div style="text-align: right; padding: 10px"><el-button type="primary" @click="saveComment(forms.id)">评论</el-button></div>
+            </div>
+          </div>
+          <div style="display: flex; padding: 20px" v-for="item in comments">
+            <div style="text-align: center; flex: 1">
+              <el-image :src="item.avatar" style="width: 60px; height: 60px; border-radius: 50%"></el-image>
+            </div>
+            <div style="padding: 0 10px; flex: 5">
+              <div><b style="font-size: 14px">{{ item.userNumber }}</b></div>
+              <div style="padding: 10px 0; color: #888">
+                {{ item.content }}
+                <el-button type="text" size="mini" @click="delComment(item)" v-if="item.userId === user.id">删除</el-button>
+              </div>
+              <div style="background-color: #eee; padding: 10px" v-if="item.parentComment">{{ item.userNumber }}：{{ item.parentComment.content }}</div>
+              <div style="color: #888; font-size: 12px">
+                <span>{{ item.createTime}}</span>
+                <el-button type="text" style="margin-left: 20px" @click="reReply(item.id)">回复</el-button>
+              </div>
+            </div>
+          </div>
+        </el-card>
+        <el-dialog title="回复信息" :visible.sync="dialogFormVisible1" width="30%">
+          <el-form :model="entity" label-width="80px">
+            <el-form-item label="内容">
+              <el-input v-model="entity.reply" autocomplete="off" type="textarea" :rows="3"></el-input>
+            </el-form-item>
+          </el-form>
+          <template #footer>
+            <el-button @click="cancel">取 消</el-button>
+            <el-button type="primary" @click="reply(forms.id)">确 定</el-button>
+          </template>
+        </el-dialog>
+
+        <div slot="footer" class="dialog-footer">
           <el-button @click="dialogFormVisibles = false">返回</el-button>
 <!--          <el-button type="primary" @click="save">确 定</el-button>-->
         </div>
-<!--        <div>
-            <button @click="LikeArticle(forms)" :class="{ liked: liked }">
-              {{ liked ? 'Unlike' : 'Like' }}
-            </button>
-            <span>{{ forms.likes }}</span>
-        </div>-->
+
 
       </el-dialog>
+
     </div>
+
+
+
+
   </div>
 </template>
 
 <script>
 import admin from "./Admin";
+
+import request from "@/utils/request";
 
 export default {
   name: "Article",
@@ -183,6 +223,7 @@ export default {
       currentPage: 1,
       dialogFormVisible: false,
       dialogFormVisibles: false,
+      dialogFormVisible1:false,
       searchArticleName: '', // 搜索框
       isLoading:false,
       visible:true,
@@ -205,6 +246,9 @@ export default {
       formLabelWidth: '80px',
       liked:false,
       favorite:false,
+
+      comments:[],
+      entity: {}
     }
   },
   created() {
@@ -365,7 +409,6 @@ export default {
     //   this.$message.success("上传成功")
     //   this.load()
     // },
-
     preview(article){
       this.forms.user=article.user
       this.forms.name=article.name
@@ -375,11 +418,78 @@ export default {
       this.forms.collect=article.collect
       this.isLike(article.id)
       this.isFavorite(article.id)
+      this.loadMessage(article.id)
       this.dialogFormVisibles=true
       //this.preview(article)
       this.load()
-    }
+    },
+    saveComment(id){
+      // 如果是评论的话，在 save的时候要注意设置 当前模块的id为 foreignId。也就是  entity.foreignId = 模块id
+      if (!this.user.username) {
+        this.$message({
+          message: "请登录",
+          type: "warning"
+        });
+        return;
+      }
+      if (!this.entity.content) {
+        this.$message({
+          message: "请填写内容",
+          type: "warning"
+        });
+        return;
+      }
+      this.entity.articleId=id
+      request.post("/comment/article", this.entity).then(res => {
+        if (res.code === '200') {
+          this.$message({
+            message: "评论成功",
+            type: "success"
+          });
+        } else {
+          this.$message({
+            message: res.msg,
+            type: "error"
+          });
+        }
+        this.entity = {}
+        this.loadMessage(id);
+        this.dialogFormVisible = false;
+      })
+    },
+    loadMessage(id) {
+      // 如果是留言的话，就写死=0
+      // 如果是 评论，则需要设置 当前被评论的模块的id作为foreignId
+      //let foreignId = 0;
+      request.get("/comment/article/"+id).then(res => {
+        this.comments = res.data;
+      })
+    },
+    delComment(row){
+      request.delete("/comment/" +row.id).then(res => {
+        this.$message({
+          message: "删除成功",
+          type: "success"
+        });
+        this.loadMessage(row.articleId)
+      })
+    },
+    reReply(id) {
+      this.dialogFormVisible1 = true;
+      this.entity.parentId = id;
+    },
+    reply(id) {
+      this.entity.content = this.entity.reply;
+      this.saveComment(id)
+      this.loadMessage(id)
+    },
+    cancel() {
+      this.dialogFormVisible1 = false;
+      this.entity = {};
+    },
   },
+
+
 }
 </script>
 

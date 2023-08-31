@@ -6,6 +6,28 @@
 
 [IDEA创建Maven项目报错- Error injecting constructor, java.lang.NoSuchMethodError: org.apache.maven.model](https://blog.csdn.net/qq_44605463/article/details/123803362)
 
+
+
+# mysql
+## tb_comment
+```mysql
+SET NAMES utf8mb4;
+SET FOREIGN_KEY_CHECKS=0;
+
+-- ----------------------------
+-- Table structure for `tb_comment`
+-- ----------------------------
+DROP TABLE IF EXISTS `tb_comment`;
+CREATE TABLE `tb_comment` (
+                              `id` int(11) NOT NULL AUTO_INCREMENT,
+                              `userId` int(11) DEFAULT NULL,
+                              `articleId` int(11) DEFAULT NULL,
+                              `content` text,
+                              `create_time` varchar(20) DEFAULT NULL,
+                              `parent_id` int(11) DEFAULT NULL,
+                              PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=38 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Compact;
+```
 # mysql
 ## tb_favorite
 ```mysql
