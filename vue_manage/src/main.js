@@ -8,6 +8,7 @@ import './assets/style.css'
 import router from './router'
 import request from "./utils/request.js"
 import './assets/iconfont/iconfont.css';
+import VueCoreVideoPlayer from 'vue-core-video-player'
 
 Vue.config.productionTip = false
 Vue.use(ElementUI);
@@ -22,4 +23,8 @@ new Vue({
   el: '#app',
   components: { App },
   template: '<App/>'
+})
+
+Vue.use(VueCoreVideoPlayer, {
+  lang: 'zh-CN'
 })

@@ -24,5 +24,7 @@ public class Like implements Serializable {
     @ApiModelProperty("文章ID")
     @TableField("articleId")
     private  Integer articleId;
-
+    @ApiModelProperty("视频ID")
+    @TableField("videoId")
+    private  Integer videoId;
 }

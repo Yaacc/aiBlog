@@ -134,7 +134,7 @@
         <el-card style="margin-top: 60px">
           <div style="padding: 20px; color: #888">
             <div>
-              <el-input type="textarea" :rows="3" v-model="entity.content"></el-input>
+              <el-input type="textarea" :rows="1" v-model="entity.content"></el-input>
               <div style="text-align: right; padding: 10px"><el-button type="primary" @click="saveComment(forms.id)">评论</el-button></div>
             </div>
           </div>
@@ -155,6 +155,9 @@
               </div>
             </div>
           </div>
+<!--          <div style="display: flex; padding: 20px" v-for="sub in comments">
+            <div style="background-color: #eee; padding: 10px" v-if="item.parentComment">{{ item.userNumber }}：{{ item.parentComment.content }}</div>
+          </div>-->
         </el-card>
         <el-dialog title="回复信息" :visible.sync="dialogFormVisible1" width="30%">
           <el-form :model="entity" label-width="80px">

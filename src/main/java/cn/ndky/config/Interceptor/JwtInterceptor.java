@@ -3,6 +3,7 @@ package cn.ndky.config.Interceptor;
 import cn.hutool.core.util.StrUtil;
 import cn.ndky.common.Constants;
 import cn.ndky.common.exception.ServiceException;
+import cn.ndky.config.AuthAccess;
 import cn.ndky.entity.User;
 import cn.ndky.service.IUserService;
 import com.auth0.jwt.JWT;
@@ -27,9 +28,16 @@ public class JwtInterceptor implements HandlerInterceptor {
         // 如果不是映射到方法直接通过
         if(!(handler instanceof HandlerMethod)){
             return true;
+        }else {
+            HandlerMethod h = (HandlerMethod) handler;
+            AuthAccess authAccess = h.getMethodAnnotation(AuthAccess.class);
+            if (authAccess != null) {
+                return true;
+            }
         }
         // 执行认证
         if (StrUtil.isBlank(token)) {
+            token=request.getParameter("token");
             throw new ServiceException(Constants.CODE_401, "无token，请重新登录");
         }
         // 获取 token 中的 user id

@@ -63,6 +63,10 @@ public class User implements Serializable {
 
       @ApiModelProperty("角色Id")
       private Integer roleId;
+
+      @ApiModelProperty("头像路径")
+      @TableField("avatarUrl")
+      private String avatarUrl;
     @Override
     public String toString() {
         return "Employee{" +

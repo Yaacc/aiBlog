@@ -103,6 +103,7 @@ export default {
   name: "Files.vue",
   data(){
     return{
+      user: localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : {},
       tableData: [],
       name: '',
       multipleSelection: [],
@@ -125,7 +126,6 @@ export default {
           pageSize: this.pageSize,
           name: this.searchFileName,
         }
-
       }).then(res=>{
         console.log(res)
         this.tableData = res.data.records
@@ -136,7 +136,6 @@ export default {
       this.searchFileName = ""
       this.load()
     },
-
     // 按序号删除
     del(id){
       this.request.delete("/files/"+id).then(res =>{
@@ -160,14 +159,12 @@ export default {
         }
       })
     },
-
     changeEnable(row){
       this.request.post("/files/update",row).then(res=>{
         if(res.code==='200'){
           this.$message.success("操作成功")
         }
       })
-
     },
     handleSizeChange(pageSize) {
       console.log(`每页 ${pageSize} 条`)
