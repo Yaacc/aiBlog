@@ -4,6 +4,7 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.SecureUtil;
+import cn.ndky.config.AuthAccess;
 import cn.ndky.config.Result;
 import cn.ndky.entity.Files;
 import cn.ndky.mapper.FilesMapper;
@@ -32,6 +33,7 @@ import java.util.List;
  * @author yaacc
  * @since 2023-08-05
  */
+
 @Slf4j
 @RestController
 @RequestMapping("/files")
@@ -48,6 +50,7 @@ public class FilesController {
      * 文件上传
      * POST http://localhost/files/upload
      */
+    @AuthAccess
     @PostMapping("/upload")
     public String upload(@RequestParam MultipartFile file) throws IOException {
         String originalFilename = file.getOriginalFilename();   // 文件原名称
@@ -139,6 +142,7 @@ public class FilesController {
      * 文件下载
      * GET http://localhost/files/{fileUUID}
      */
+    @AuthAccess
     @GetMapping("/{fileUUID}")
     public void download(@PathVariable String fileUUID, HttpServletResponse response) throws IOException {
         // 根据标识码获取文件

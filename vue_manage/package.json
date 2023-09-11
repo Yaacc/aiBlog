@@ -17,6 +17,7 @@
     "echarts": "^5.4.3",
     "element-ui": "^2.15.13",
     "vue": "^2.5.2",
+    "vue-core-video-player": "^0.2.0",
     "vue-router": "^3.0.1"
   },
   "devDependencies": {

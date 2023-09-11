@@ -5,8 +5,51 @@
 [IDEA fork别人的GitHub项目、保持代码同步、开发并pull request](https://blog.csdn.net/qq_39618369/article/details/108758462)
 
 [IDEA创建Maven项目报错- Error injecting constructor, java.lang.NoSuchMethodError: org.apache.maven.model](https://blog.csdn.net/qq_44605463/article/details/123803362)
+# mysql
+## tb_feedback
+```mysql
+SET NAMES utf8mb4;
+SET FOREIGN_KEY_CHECKS=0;
+-- ----------------------------
+-- Table structure for `tb_video`
+-- ----------------------------
+DROP TABLE IF EXISTS `tb_video`;
+CREATE TABLE `tb_video` (
+                            `id` int(11) NOT NULL AUTO_INCREMENT,
+                            `user` varchar(10) DEFAULT NULL COMMENT '发布者',
+                            `video_title` varchar(255) DEFAULT NULL COMMENT '视频标题',
+                            `video_desc` text COMMENT '视频介绍',
+                            `video_cover` varchar(255) DEFAULT NULL COMMENT '视频封面',
+                            `video_path` varchar(255) DEFAULT NULL COMMENT '视频路径',
+                            `video_status` int(11) DEFAULT '1',
+                            `video_like` int(20) DEFAULT NULL,
+                            `video_created` varchar(20) DEFAULT NULL,
+                            PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=0 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Compact;
+```
 
 
+# mysql
+## tb_feedback
+```mysql
+SET NAMES utf8mb4;
+SET FOREIGN_KEY_CHECKS=0;
+
+-- ----------------------------
+-- Table structure for `tb_feedback`
+-- ----------------------------
+DROP TABLE IF EXISTS `tb_feedback`;
+CREATE TABLE `tb_feedback` (
+                               `id` int(11) NOT NULL AUTO_INCREMENT,
+                               `content` varchar(225) DEFAULT NULL,
+                               `user_id` int(11) DEFAULT NULL,
+                               `createDate` varchar(25) DEFAULT NULL,
+                               `admin_id` int(11) DEFAULT NULL,
+                               `answer` varchar(255) DEFAULT NULL,
+                               `answerDate` varchar(25) DEFAULT NULL,
+                               PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=0 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Compact;
+```
 
 # mysql
 ## tb_comment
@@ -26,7 +69,7 @@ CREATE TABLE `tb_comment` (
                               `create_time` varchar(20) DEFAULT NULL,
                               `parent_id` int(11) DEFAULT NULL,
                               PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=38 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Compact;
+) ENGINE=InnoDB AUTO_INCREMENT=0 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Compact;
 ```
 # mysql
 ## tb_favorite
@@ -43,7 +86,7 @@ CREATE TABLE `tb_favorite` (
                                `userId` int(11) DEFAULT NULL COMMENT '用户',
                                `articleId` int(11) DEFAULT NULL COMMENT '文章',
                                PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=84 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Compact;
+) ENGINE=InnoDB AUTO_INCREMENT=0 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Compact;
 ```
 # mysql
 ## tb_like
@@ -61,7 +104,7 @@ CREATE TABLE `tb_role` (
 `role_code` varchar(20) DEFAULT NULL COMMENT '角色编号',
 `role_note` varchar(64) DEFAULT NULL COMMENT '备注',
 PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=28 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Compact;
+) ENGINE=InnoDB AUTO_INCREMENT=0 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Compact;
 
 ```
 # mysql
@@ -79,7 +122,7 @@ CREATE TABLE `tb_like` (
 `userId` int(11) DEFAULT NULL COMMENT '用户',
 `articleId` int(11) DEFAULT NULL COMMENT '文章',
 PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Compact;
+) ENGINE=InnoDB AUTO_INCREMENT=0 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Compact;
 ```
 
 # mysql

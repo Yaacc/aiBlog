@@ -3,7 +3,7 @@
 */
 <template>
   <el-menu
-    :default-openeds="['2']"
+    :default-openeds="['']"
     class="el-menu-vertical"
     :collapse="isCollapse"
     :collapse-transition="false"
@@ -31,14 +31,14 @@
 <!--        <template slot="title">分组一</template>-->
         <el-menu-item index="/user">用户管理</el-menu-item>
         <el-menu-item index="/admin">管理员管理</el-menu-item>
-        <el-menu-item index="/files">文件管理</el-menu-item>
+        <el-menu-item index="/files">资源管理</el-menu-item>
 <!--        <el-menu-item index="/article">文章管理</el-menu-item>-->
       </el-menu-item-group>
     </el-submenu>
     <el-submenu index="3">
       <template slot="title">
         <i class="el-icon-document"></i>
-        <span slot="title">文章管理</span>
+        <span slot="title">资讯管理</span>
       </template>
         <el-menu-item-group>
       <!--        <template slot="title">分组一</template>-->
@@ -46,11 +46,28 @@
           <el-menu-item index="/userArticle">用户文章列表</el-menu-item>
         </el-menu-item-group>
     </el-submenu>
-    <el-menu-item index="/comment">
-      <i class="el-icon-house"></i>
-      <span slot="title">反馈</span>
-    </el-menu-item>
+
     <el-submenu index="4">
+      <template slot="title">
+        <i class="el-icon-document"></i>
+        <span slot="title">视频管理</span>
+      </template>
+      <el-menu-item-group>
+        <!--        <template slot="title">分组一</template>-->
+        <el-menu-item index="/video">视频列表</el-menu-item>
+        <el-menu-item index="/videoPublish">视频发表</el-menu-item>
+      </el-menu-item-group>
+    </el-submenu>
+    <el-submenu index="5">
+      <template slot="title">
+        <i class="el-icon-document"></i>
+        <span slot="title">问题与反馈</span>
+      </template>
+      <el-menu-item-group>
+        <el-menu-item index="/feedback">反馈列表</el-menu-item>
+      </el-menu-item-group>
+    </el-submenu>
+    <el-submenu index="6">
       <template slot="title">
         <i class="el-icon-document"></i>
         <span slot="title">我的</span>
@@ -63,7 +80,6 @@
     </el-submenu>
   </el-menu>
 </template>
-
 <script>
 export default {
   name: "Aside",
@@ -81,7 +97,6 @@ export default {
   }
 }
 </script>
-
 <style scoped>
 .el-menu-vertical {
   min-height: 100%;
@@ -101,5 +116,4 @@ export default {
 .menuHeader img{
   width: 25px;
 }
-
 </style>
